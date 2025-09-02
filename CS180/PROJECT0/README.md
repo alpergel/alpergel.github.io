@@ -7,11 +7,11 @@
 
 <h2 align="center" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0.2rem 0 0.4rem; letter-spacing: 0.3px; background: linear-gradient(90deg, #5B8DEF, #A78BFA); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Alper Gel — Project 0</h2>
 
----
+<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 12px 0 16px;">
 
 
 
-### Part 1: Selfie — The Wrong Way vs. The Right Way
+<h3 style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; font-weight: 700; margin: 12px 0 10px; color: #0f172a; letter-spacing: 0.2px;">Part 1: Selfie — The Wrong Way vs. The Right Way</h3>
 
 <table>
   <tr>
@@ -33,9 +33,9 @@
   </tr>
 </table>
 
----
+<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;">
 
-### Part 2: Architectural Perspective Compression
+<h3 style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; font-weight: 700; margin: 12px 0 10px; color: #0f172a; letter-spacing: 0.2px;">Part 2: Architectural Perspective Compression</h3>
 
 
 <table>
@@ -64,10 +64,10 @@
   </tr>
 </table>
 
----
+<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;">
 
-### Part 3: The Dolly Zoom
-This dolly zoom showcases my roommates car. This was done by aligning and leveling the car to a grid square, taking a picture, then moving back, then zooming enough for the Totoro to be aligned within the same grid square again.
+<h3 style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; font-weight: 700; margin: 12px 0 10px; color: #0f172a; letter-spacing: 0.2px;">Part 3: The Dolly Zoom</h3>
+<p style="color:#475569; margin: 6px 0 12px;">This dolly zoom showcases my roommates car. This was done by aligning and leveling the car to a grid square, taking a picture, then moving back, then zooming enough for the Totoro to be aligned within the same grid square again.</p>
 <div style="background:#ffffff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.06);">
   <img src="./assets/task3/car.gif" alt="Task 3 animated result" width="100%" style="display:block; border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 8px 20px rgba(0,0,0,0.06);" />
   <br/>
