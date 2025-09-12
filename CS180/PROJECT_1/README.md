@@ -1,6 +1,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <div style="max-width: 1100px; margin: 0 auto; padding: 12px 18px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; color: #0f172a; line-height: 1.6;">
+<style>
+/* Gallery appearance: rounded black frame; non-white inner background; images stay square */
+figure { background: #f1f5f9; padding: 6px; border: 1px solid #000; border-radius: 10px; }
+figure img { border-radius: 0 !important; border: none !important; box-shadow: none !important; display: block; }
+/* Lightbox: subtle 1px border, no shadow */
+#img-lightbox-img { border-radius: 0 !important; border: 1px solid #000 !important; box-shadow: none !important; }
+</style>
 <p align="center" style="margin: 0 0 10px;">
   <img src="https://img.shields.io/badge/CS180-Project%201-5B8DEF?style=for-the-badge" alt="CS180 Project 1 badge">
 </p>
@@ -75,7 +82,7 @@
   <div id="img-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.75); z-index: 9999; align-items: center; justify-content: center; padding: 24px;">
     <div role="dialog" aria-modal="true" aria-label="Image preview" style="max-width: min(90vw, 1100px); max-height: 90vh; position: relative;">
       <button type="button" id="img-lightbox-close" aria-label="Close image" style="position: absolute; top: -10px; right: -10px; background: #0f172a; color: #fff; border: none; border-radius: 999px; width: 36px; height: 36px; cursor: pointer; font-size: 20px; line-height: 36px; text-align: center;">×</button>
-      <img id="img-lightbox-img" src="" alt="Preview" style="max-width: 100%; max-height: 90vh; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 12px 30px rgba(0,0,0,0.35);">
+      <img id="img-lightbox-img" src="" alt="Preview" style="max-width: 100%; max-height: 90vh; border-radius: 0; border: 2px solid #000; box-shadow: 0 12px 30px rgba(0,0,0,0.35);">
       <div id="img-lightbox-caption" style="color: #e2e8f0; margin-top: 8px; text-align: center; font-size: 0.95rem;"></div>
     </div>
   </div>
@@ -88,11 +95,14 @@
     var captionEl = document.getElementById('img-lightbox-caption');
     var closeBtn = document.getElementById('img-lightbox-close');
 
-    // Indicate interactivity on thumbnails
-    var thumbs = document.querySelectorAll('figure img');
+    // Indicate interactivity on all images except the lightbox image itself
+    var thumbs = document.querySelectorAll('img:not(#img-lightbox-img)');
     for (var i = 0; i < thumbs.length; i++) {
       thumbs[i].style.cursor = 'zoom-in';
       thumbs[i].setAttribute('title', 'Click to enlarge');
+      // Ensure square corners; border handled by figure frame
+      thumbs[i].style.borderRadius = '0';
+      thumbs[i].style.border = 'none';
     }
 
     function openLightbox(src, alt, caption) {
@@ -115,8 +125,8 @@
 
     document.addEventListener('click', function (e) {
       var target = e.target || e.srcElement;
-      var img = target && target.closest ? target.closest('figure img') : null;
-      if (img) {
+      var img = target && target.closest ? target.closest('img:not(#img-lightbox-img)') : null;
+      if (img && !overlay.contains(img)) {
         var figure = img.closest ? img.closest('figure') : null;
         var capEl = figure ? figure.querySelector('figcaption') : null;
         var caption = capEl ? capEl.textContent : '';
@@ -342,40 +352,45 @@
 
 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 14px 0 14px;">
 
-<h3 id="bells-1" style="font-size: 1.4rem; margin: 18px 0 8px;">Bells and Whistles 1</h3>
-<p style="margin: 0 0 10px; color: #334155;">Description of the first extra feature and what it adds.</p>
+<h3 id="bells-1" style="font-size: 1.4rem; margin: 18px 0 8px;">Bells and Whistles 1: Automatic Border Cropping</h3>
+<p style="margin: 0 0 10px; color: #334155;">Due to the visually jarring nature of the vertical and horizontal single-color segments, I decided to try and remove these automatically. I did a pipeline design, where after the image matching stage, the output image is saved, then gets passed into remove_vertical_border, which takes out any approximately single color columns near the borders of the image, this outputs the mask used to remove the column and the post-processed image. Then the post-processed image gets put through remove_horizontal_border, which does the same thing, but for horizontal segments. Both remove_vertical_border and remove_horizontal_border functions work by detecting and removing uniform color bands that appear as borders in scanned images. The methods follow a similar color-based detection approach but operate in perpendicular directions.
+The vertical border removal function analyzes each column of pixels near the image border to find vertical bands of uniform color. It first converts the image to HSV color space and applies median blur for noise reduction. For each column, it calculates the median HSV values and then checks how many pixels in that column are within the specified color tolerance thresholds (for hue, saturation, and value) of the median. If at least the threshold value [85%] of pixels in a column match the median color, that column is marked as uniform. Continuous uniform columns that are at least 3 pixels wide are grouped into bands. The function then creates a mask for these bands, applies morphological operations (closing to fill small gaps and dilation to ensure clean edges), and finally removes the masked columns by keeping only the unmasked portions of the image.
+The horizontal border removal function operates identically but analyzes rows instead of columns to detect horizontal bands. It calculates per-row median HSV values and identifies rows where at least 85% of pixels match their row's median color. The key difference is an additional constraint: only bands that appear at the very top (within 5 pixels) or bottom (within 5 pixels) of the image are considered as borders to remove. This prevents the function from removing horizontal bands that might appear in the middle of the image content. After identifying qualifying bands, it creates a mask, applies morphological operations for cleanup, and crops out the masked rows to produce the cleaned image.
 
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 8px 0 12px;">
+In the images below, I have provided 2 different examples that are directly post-processed from the pyramid method output results in the section above. Results 1 and 5 show vertical mask, Results 2 and 6 show vertical cleaned image, Results 3 and 7 show horizontal mask, and Results 4 and 8 show the final result of the border removal pipeline, being the horizontal cleaned image. Please note that the white sections of the mask images are tough to see, so please click the image to zoom! 
+</p>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 12px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_01.jpg" alt="Bells and Whistles 1 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/emir/vert_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_02.jpg" alt="Bells and Whistles 1 result 02" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/emir/vert_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 02" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 02</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_03.jpg" alt="Bells and Whistles 1 result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/emir/horiz_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 03</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_04.jpg" alt="Bells and Whistles 1 result 04" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/emir/horiz_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 04" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 04</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_05.jpg" alt="Bells and Whistles 1 result 05" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/church/vert_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 05" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 05</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_06.jpg" alt="Bells and Whistles 1 result 06" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/church/vert_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 06" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 06</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_07.jpg" alt="Bells and Whistles 1 result 07" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/church/horiz_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 07" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 07</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells1/result_08.jpg" alt="Bells and Whistles 1 result 08" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <img src="assets/bw1/church/horiz_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 08" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 08</figcaption>
   </figure>
 </div>
@@ -384,7 +399,7 @@
 
 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 14px 0 14px;">
 
-<h3 id="bells-2" style="font-size: 1.4rem; margin: 18px 0 8px;">Bells and Whistles 2</h3>
+<h3 id="bells-2" style="font-size: 1.4rem; margin: 18px 0 8px;">Bells and Whistles 2: Deep Learning Fast Feature Matching</h3>
 <p style="margin: 0 0 10px; color: #334155;">Description of the second extra feature and its results.</p>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 8px 0 12px;">
@@ -404,10 +419,168 @@
 
 <details>
   <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
-  <pre style="white-space: pre-wrap; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; color: #0f172a; margin-top: 8px;">[Replace with your Bells and Whistles 2 logs]
-iteration=1, params=..., metric=...
-iteration=2, params=..., metric=...
-...
+  <pre style="white-space: pre-wrap; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; color: #0f172a; margin-top: 8px;">
+  (base) root@MSI:/mnt/c/Users/aalis/Documents/Code/Class/FA25/CS180/Project-1# python3 process_xfeat.py Inputs/  -o Output_xfeat/
+    Loading XFeat model...
+    Using cache found in /root/.cache/torch/hub/verlab_accelerated_features_main
+    XFeat loaded on device: cuda
+    Processing image: Inputs/cathedral.jpg
+
+    Aligning blue channel to green...
+    Loaded LightGlue model
+    Found 1128 feature matches
+    Estimated affine transformation with 1087 inliers
+
+    Aligning red channel to green...
+    Found 1338 feature matches
+    Estimated affine transformation with 1304 inliers
+
+    Output saved to: Output_xfeat/cathedral/out_xfeat.jpg
+    Processing image: Inputs/monastery.jpg
+
+    Aligning blue channel to green...
+    Found 742 feature matches
+    Estimated affine transformation with 728 inliers
+
+    Aligning red channel to green...
+    Found 894 feature matches
+    Estimated affine transformation with 865 inliers
+
+    Output saved to: Output_xfeat/monastery/out_xfeat.jpg
+    Processing image: Inputs/tobolsk.jpg
+
+    Aligning blue channel to green...
+    Found 885 feature matches
+    Estimated affine transformation with 877 inliers
+
+    Aligning red channel to green...
+    Found 948 feature matches
+    Estimated affine transformation with 937 inliers
+
+    Output saved to: Output_xfeat/tobolsk/out_xfeat.jpg
+    Processing image: Inputs/church.tif
+
+    Aligning blue channel to green...
+    Found 1619 feature matches
+    Estimated affine transformation with 1202 inliers
+
+    Aligning red channel to green...
+    Found 1753 feature matches
+    Estimated affine transformation with 1384 inliers
+
+    Output saved to: Output_xfeat/church/out_xfeat.jpg
+    Processing image: Inputs/emir.tif
+
+    Aligning blue channel to green...
+    Found 1539 feature matches
+    Estimated affine transformation with 839 inliers
+
+    Aligning red channel to green...
+    Found 1525 feature matches
+    Estimated affine transformation with 967 inliers
+
+    Output saved to: Output_xfeat/emir/out_xfeat.jpg
+    Processing image: Inputs/harvesters.tif
+
+    Aligning blue channel to green...
+    Found 1371 feature matches
+    Estimated affine transformation with 765 inliers
+
+    Aligning red channel to green...
+    Found 1469 feature matches
+    Estimated affine transformation with 993 inliers
+
+    Output saved to: Output_xfeat/harvesters/out_xfeat.jpg
+    Processing image: Inputs/icon.tif
+
+    Aligning blue channel to green...
+    Found 1388 feature matches
+    Estimated affine transformation with 857 inliers
+
+    Aligning red channel to green...
+    Found 1510 feature matches
+    Estimated affine transformation with 1065 inliers
+
+    Output saved to: Output_xfeat/icon/out_xfeat.jpg
+    Processing image: Inputs/italil.tif
+
+    Aligning blue channel to green...
+    Found 1640 feature matches
+    Estimated affine transformation with 1163 inliers
+
+    Aligning red channel to green...
+    Found 1772 feature matches
+    Estimated affine transformation with 1342 inliers
+
+    Output saved to: Output_xfeat/italil/out_xfeat.jpg
+    Processing image: Inputs/lastochikino.tif
+
+    Aligning blue channel to green...
+    Found 1195 feature matches
+    Estimated affine transformation with 676 inliers
+
+    Aligning red channel to green...
+    Found 1492 feature matches
+    Estimated affine transformation with 1046 inliers
+
+    Output saved to: Output_xfeat/lastochikino/out_xfeat.jpg
+    Processing image: Inputs/lugano.tif
+
+    Aligning blue channel to green...
+    Found 1643 feature matches
+    Estimated affine transformation with 1221 inliers
+
+    Aligning red channel to green...
+    Found 1630 feature matches
+    Estimated affine transformation with 1125 inliers
+
+    Output saved to: Output_xfeat/lugano/out_xfeat.jpg
+    Processing image: Inputs/melons.tif
+
+    Aligning blue channel to green...
+    Found 1625 feature matches
+    Estimated affine transformation with 1307 inliers
+
+    Aligning red channel to green...
+    Found 1572 feature matches
+    Estimated affine transformation with 1281 inliers
+
+    Output saved to: Output_xfeat/melons/out_xfeat.jpg
+    Processing image: Inputs/self_portrait.tif
+
+    Aligning blue channel to green...
+    Found 1297 feature matches
+    Estimated affine transformation with 854 inliers
+
+    Aligning red channel to green...
+    Found 1458 feature matches
+    Estimated affine transformation with 1229 inliers
+
+    Output saved to: Output_xfeat/self_portrait/out_xfeat.jpg
+    Processing image: Inputs/siren.tif
+
+    Aligning blue channel to green...
+    Found 1321 feature matches
+    Estimated affine transformation with 808 inliers
+
+    Aligning red channel to green...
+    Found 1387 feature matches
+    Estimated affine transformation with 1005 inliers
+
+    Output saved to: Output_xfeat/siren/out_xfeat.jpg
+    Processing image: Inputs/three_generations.tif
+
+    Aligning blue channel to green...
+    Found 1520 feature matches
+    Estimated affine transformation with 1124 inliers
+
+    Aligning red channel to green...
+    Found 1614 feature matches
+    Estimated affine transformation with 1149 inliers
+
+    Output saved to: Output_xfeat/three_generations/out_xfeat.jpg
+
+    Total processing time: 107.38 seconds
   </pre>
 </details>
 
