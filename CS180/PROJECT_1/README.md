@@ -15,9 +15,22 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 <h2 align="center" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0.2rem 0 0.4rem; letter-spacing: 0.3px; background: linear-gradient(90deg, #5B8DEF, #A78BFA); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Alper Gel — Project 1</h2>
 
 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 12px 0 16px;">
+<h2 id="project-overview" style="font-family: 'Playfair Display', serif; font-size: 1.7rem; margin: 0.5rem 0 1rem;">Project Overview</h2>
+<p style="margin: 0 0 12px; color: #334155;">
+Welcome to my CS180 Project 1 site! This page provides a comprehensive overview of my implementation, results, and analysis for the Prokudin-Gorskii image alignment project. 
+</p>
+<ul style="margin: 0 0 12px 18px; color: #334155;">
+  <li><b>Visual Results:</b> Click on each image in the galleries below to expand it!</li>
+  <li><b>Logs & Analysis:</b> Logs from each of the alignment methods can be clicked and expanded to show the displacements found for each image in terms of dy, dx, and the time the method took for the 14 image run</li>
+</ul>
 
-<h3 id="required-part-1" style="font-size: 1.4rem; margin: 18px 0 8px;">Required Part 1</h3>
-<p style="margin: 0 0 10px; color: #334155;">Description of the first required component/algorithm and what it demonstrates.</p>
+
+<h3 id="required-part-1" style="font-size: 1.4rem; margin: 18px 0 8px;">Required Part 1: Single Scale Approach</h3>
+<p style="margin: 0 0 10px; color: #334155;">For part 1, programmed in the file process.py, I implemented a simple single-scale exhaustive search approach to align the three color channels of the given historical Prokudin-Gorskii glass plate photographs.
+The alignment process begins by splitting the grayscale input image into three equal vertical sections representing the blue (top), green (middle), and red (bottom) channels. In order to provide results for all 14 in our dataset, for computational efficiency, images larger than 2000 pixels in height are downsampled by a factor of 4 before processing. The green channel is used as the reference that is not moved, and both blue and red channels are aligned to it independently.
+The core matching algorithm in the align_single_scale function performs an exhaustive search over a window of possible displacements (typically ±20 pixels in both x and y directions). For each candidate displacement, it shifts one channel relative to the other and computes a the Sum of Squared Differences (SSD) as its matching criterion. All SSD does is calculating the squared difference between overlapping pixel intensities and summing them up. The displacement that yields the minimum SSD score is selected as the best alignment.
+To improve matching results, and avoid influence by the problematic borders, I excluded the border regions (20% margin on each side) when computing the similarity score. The algorithm only evaluates the inner portion of the image where actual content is present, ensuring that the matching focuses on meaningful image features rather than scanning artifacts.
+Once the optimal displacements are found, the final step applies these shifts using np.roll to align the blue and red channels with the green reference. The three aligned channels are then stacked together to create the final color image. As expected in the project spec, this naive approach works effectively for smaller images but has limitations with larger, high-resolution images where a multi-scale pyramid approach (as implemented in process_pyramid.py) would be more appropriate.</p>
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(7, auto); gap: 10px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
@@ -237,8 +250,13 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 
 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 14px 0 14px;">
 
-<h3 id="required-part-2" style="font-size: 1.4rem; margin: 18px 0 8px;">Required Part 2</h3>
-<p style="margin: 0 0 10px; color: #334155;">Description of the second required component/algorithm and its outcomes.</p>
+<h3 id="required-part-2" style="font-size: 1.4rem; margin: 18px 0 8px;">Required Part 2: Image Pyramid Approach</h3>
+<p style="margin: 0 0 10px; color: #334155;">The image matching methodology in process_pyramid.py implements a multi-scale pyramid alignment approach that significantly improves upon the previous single-scale method for cases where we have to handle large, high-resolution images.
+The pyramid construction begins with the build_pyramid function, which creates a hierarchical representation of each image by repeatedly downsampling by a factor of 2, and using INTERAREA interpolation provided by OPENCV. The number of pyramid levels is dynamically calculated based on image dimensions, ensuring the coarsest level has a minimum dimension of around 256 pixels. I originally tried 32 pixels, but then it over-optimized it, and caused major visual artifacts, so increasing the final layer resolution allowed for an actual searchable image. This creates a sequence of images from coarse (heavily downsampled) to fine (original resolution), allowing the algorithm to capture both large-scale structural alignment and fine detail matching.
+The multi-scale alignment process in align_pyramid works by starting at the coarsest pyramid level where the search is computationally cheap and large misalignments are easier to detect. At each level, it performs the same exhaustive search as the single-scale method using SSD (Sum of Squared Differences) within a displacement window. However, the main difference is that the optimal displacement (dx, dy) found at each previous level is propagated to the next level (which has higher res) as an initial center point. Thus, when moving to a finer level, the displacement must be doubled (given the image is twice as large in pixel count) and the search window is halved, in order to focus the search around the existing approximate alignment from the previous level. 
+Overall, this coarse-to-fine approach allows for dramatically less computation time by limiting search space at finer resolutions, improves robustness by capturing large displacements at coarse scales that could be missed at finer resolutions (local minima), and is only 1/3 more memory in terms of the efficiency of the image pyramid. 
+The final aligment applies the accumulated displacement from all pyramid levels to the original full resolution image using the given np.roll function. Exactly like the single-scale, it excludes 20% border margins when computing the similarity scores to avoid the scanning artifacts from biasing the calculation. This pyramid approach enables accurate alignment of very large images that would be difficult in single-scale exhaustive search, while maintaining (and in some edge-cases improving) the alignment quality through iterative hierarchical refinement.
+</p>
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(7, auto); gap: 10px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
     <img src="assets/part2/cathedral/pyramid_out.jpg" alt="Part 2 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
@@ -399,23 +417,69 @@ Based on my significant recent experience using 'learned' feature extractors for
 The alignment process in align_with_xfeat() takes the matched keypoint pairs and estimates a geometric transformation to align one channel to another. It uses RANSAC-based estimation of an affine transformation (specifically estimateAffinePartial2D from opencv), which allows for translation, rotation, and uniform scaling while being robust to outliers in the matches. The RANSAC algorithm iteratively finds the best transformation that satisfies the most inlier matches within a 5-pixel reprojection threshold. Once the transformation matrix is computed, it applies the transformation using cv2.warpAffine() to align the second image to the first. This provides us the blue-green or red-green alignment. After alignment, the three channels are stacked to create a color image. 
 The method is particularly effective because XFeat provides robust,  learning-based local features that are invariant to various transformations and can handle the challenges of aligning historical photographs where traditional pixel-intensity based feature detectors might struggle. The use of affine transformation provides a good balance between flexibility and stability, preventing unrealistic warping while still correcting for the typical misalignments found in these historical three-channel images. Finally, Xfeat is quite quick, even on CPU. In fact, it performed around 20 seconds faster than the pyramid method when doing a full run. Further, I didn't spend any time optimizing, so I think it could be even faster. 
 
-The images below show an input, the feature matching visualization, and the output
+The images below show the result of xfeat matching on the dataset of 14 images.
 </p>
-
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 8px 0 12px;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(7, auto); gap: 10px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
-    <img src="assets/bw2/service-pnp-prok-00100-00130v/red_green_matches.jpg" alt="Bells and Whistles 2 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01 Xfeat Red Green Feature Matching Visualization</figcaption>
+    <img src="assets/bw2/Output_xfeat/cathedral/out_xfeat.jpg" alt="Xfeat result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bw2/service-pnp-prok-00100-00130v/blue_green_matches.jpg" alt="Bells and Whistles 2 result 02" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 02 Xfeat Blue Green Feature Matching Visualization </figcaption>
+    <img src="assets/bw2/Output_xfeat/church/out_xfeat.jpg" alt="Xfeat result 02" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 02</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bw2/service-pnp-prok-00100-00130v/out_xfeat.jpg" alt="Bells and Whistles 2 result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 03 Xfeat Matched Image</figcaption>
+    <img src="assets/bw2/Output_xfeat/emir/out_xfeat.jpg" alt="Xfeat result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 03</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/harvesters/out_xfeat.jpg" alt="Xfeat result 04" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 04</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/icon/out_xfeat.jpg" alt="Xfeat result 05" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 05</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/italil/out_xfeat.jpg" alt="Xfeat result 06" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 06</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/lastochikino/out_xfeat.jpg" alt="Xfeat result 07" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 07</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/lugano/out_xfeat.jpg" alt="Xfeat result 08" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 08</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/melons/out_xfeat.jpg" alt="Xfeat result 09" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 09</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/monastery/out_xfeat.jpg" alt="Xfeat result 10" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 10</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/self_portrait/out_xfeat.jpg" alt="Xfeat result 11" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 11</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/siren/out_xfeat.jpg" alt="Xfeat result 12" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 12</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/three_generations/out_xfeat.jpg" alt="Xfeat result 13" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 13</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="assets/bw2/Output_xfeat/tobolsk/out_xfeat.jpg" alt="Xfeat result 14" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 14</figcaption>
   </figure>
 </div>
+The image below shows the pipeline described:
+<img src="assets/bw2/Flowchart(4).jpg" alt="Pipeline Flowchart" style="width: 100%; max-width: 900px; display: block; margin: 18px auto 18px; border-radius: 12px; border: 1px solid #e5e7eb;">
+
 
 <details>
   <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
@@ -583,6 +647,100 @@ The images below show an input, the feature matching visualization, and the outp
     Total processing time: 107.38 seconds
   </pre>
 </details>
+<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 18px 0 18px;">
+
+<h3 id="time-analysis" style="font-size: 1.4rem; margin: 18px 0 8px;">Time Analysis: Single Scale vs. Pyramid vs. Feature-Based Methods</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+A key consideration in image alignment is the tradeoff between accuracy and computational efficiency. Below is a summary of the total processing times for all 14 images using each of the three approaches implemented in this project:
+</p>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+  <thead>
+    <tr style="background: #f1f5f9;">
+      <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: left;">Method</th>
+      <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: left;">Total Time (s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e5e7eb;">Single Scale (process.py)</td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb;">215.29</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e5e7eb;">Image Pyramid (process_pyramid.py)</td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb;">134.69</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e5e7eb;">Feature-Based (process_xfeat.py)</td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb;">107.38</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul style="color: #64748b; margin-bottom: 10px;">
+  <li><b>Single Scale:</b> The naive exhaustive search is computationally expensive, especially for high-resolution images, resulting in the longest total runtime.</li>
+  <li><b>Image Pyramid:</b> The multi-scale approach dramatically reduces computation by limiting the search at finer scales, making it the fastest method overall while maintaining high alignment quality.</li>
+  <li><b>Feature-Based:</b> The feature-matching method (using xfeat) is robust and relatively fast, providing the same (if not better) accuracy, while being 30 seconds faster than the image pyramid approach.</li>
+</ul>
+
+<h3 id="additional-results" style="font-size: 1.4rem; margin: 18px 0 8px;">Additional Results: Method Comparison Matrix</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+Below is a 3&times;3 matrix of additional aligned images. Each row shows a different image, outside of the original dataset provided, and found from the library of Congress website. Each column compares the result from the Single Scale, Image Pyramid, and Feature-Based (xfeat) methods, respectively:
+</p>
+<table style="width: 100%; border-collapse: collapse; margin: 12px 0 18px;">
+  <thead>
+    <tr style="background: #f1f5f9;">
+      <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">Single Scale</th>
+      <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">Image Pyramid</th>
+      <th style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">Feature-Based (xfeat)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_naive/master-pnp-prok-00000-00011u/aligned_out.jpg" alt="Extra 1 Single Scale" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">master-pnp-prok-00000-00011u</div>
+      </td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_pyramid/master-pnp-prok-00000-00011u/pyramid_out.jpg" alt="Extra 1 Pyramid" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">master-pnp-prok-00000-00011u</div>
+      </td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_xfeat/master-pnp-prok-00000-00011u/out_xfeat.jpg" alt="Extra 1 xfeat" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">master-pnp-prok-00000-00011u</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_naive/master-pnp-prok-00000-00086u/aligned_out.jpg" alt="Extra 2 Single Scale" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">master-pnp-prok-00000-00086u</div>
+      </td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_pyramid/master-pnp-prok-00000-00086u/pyramid_out.jpg" alt="Extra 2 Pyramid" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">master-pnp-prok-00000-00086u</div>
+      </td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_xfeat/master-pnp-prok-00000-00086u/out_xfeat.jpg" alt="Extra 2 xfeat" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">master-pnp-prok-00000-00086u</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_naive/service-pnp-prok-00100-00130v/aligned_out.jpg" alt="Extra 3 Single Scale" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">service-pnp-prok-00100-00130v</div>
+      </td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_pyramid/service-pnp-prok-00100-00130v/pyramid_out.jpg" alt="Extra 3 Pyramid" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">service-pnp-prok-00100-00130v</div>
+      </td>
+      <td style="padding: 8px; border: 1px solid #e5e7eb; text-align: center;">
+        <img src="assets/additional/Additional_out_xfeat/service-pnp-prok-00100-00130v/out_xfeat.jpg" alt="Extra 3 xfeat" style="width: 100%; max-width: 220px; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+        <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">service-pnp-prok-00100-00130v</div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 
 </div>
 
