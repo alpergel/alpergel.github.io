@@ -742,7 +742,6 @@ Below is a 3&times;3 matrix of additional aligned images. Each row shows a diffe
 </table>
 
 
-</div>
 
 
 
