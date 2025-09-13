@@ -19,8 +19,7 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 <h3 id="required-part-1" style="font-size: 1.4rem; margin: 18px 0 8px;">Required Part 1</h3>
 <p style="margin: 0 0 10px; color: #334155;">Description of the first required component/algorithm and what it demonstrates.</p>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 8px 0 12px;">
-  <!-- Duplicate or replace these figures with your own images -->
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(7, auto); gap: 10px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
     <img src="assets/part1/cathedral/aligned_out.jpg" alt="Part 1 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01</figcaption>
@@ -77,6 +76,7 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
     <img src="assets/part1/tobolsk/aligned_out.jpg" alt="Part 1 result 14" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 14</figcaption>
   </figure>
+</div>
 
   <!-- Image Lightbox Overlay -->
   <div id="img-lightbox" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.75); z-index: 9999; align-items: center; justify-content: center; padding: 24px;">
@@ -239,8 +239,7 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 
 <h3 id="required-part-2" style="font-size: 1.4rem; margin: 18px 0 8px;">Required Part 2</h3>
 <p style="margin: 0 0 10px; color: #334155;">Description of the second required component/algorithm and its outcomes.</p>
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 8px 0 12px;">
-  <!-- Duplicate or replace these figures with your own images -->
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(7, auto); gap: 10px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
     <img src="assets/part2/cathedral/pyramid_out.jpg" alt="Part 2 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
     <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01</figcaption>
@@ -357,41 +356,35 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 The vertical border removal function analyzes each column of pixels near the image border to find vertical bands of uniform color. It first converts the image to HSV color space and applies median blur for noise reduction. For each column, it calculates the median HSV values and then checks how many pixels in that column are within the specified color tolerance thresholds (for hue, saturation, and value) of the median. If at least the threshold value [85%] of pixels in a column match the median color, that column is marked as uniform. Continuous uniform columns that are at least 3 pixels wide are grouped into bands. The function then creates a mask for these bands, applies morphological operations (closing to fill small gaps and dilation to ensure clean edges), and finally removes the masked columns by keeping only the unmasked portions of the image.
 The horizontal border removal function operates identically but analyzes rows instead of columns to detect horizontal bands. It calculates per-row median HSV values and identifies rows where at least 85% of pixels match their row's median color. The key difference is an additional constraint: only bands that appear at the very top (within 5 pixels) or bottom (within 5 pixels) of the image are considered as borders to remove. This prevents the function from removing horizontal bands that might appear in the middle of the image content. After identifying qualifying bands, it creates a mask, applies morphological operations for cleanup, and crops out the masked rows to produce the cleaned image.
 
-In the images below, I have provided 2 different examples that are directly post-processed from the pyramid method output results in the section above. Results 1 and 5 show vertical mask, Results 2 and 6 show vertical cleaned image, Results 3 and 7 show horizontal mask, and Results 4 and 8 show the final result of the border removal pipeline, being the horizontal cleaned image. Please note that the white sections of the mask images are tough to see, so please click the image to zoom! 
+This method was not integrated into single-scale, was integrated as an additional output into pyramid method, and was integrated as default into the xfeat method. 
+
+In the images below, I have provided 2 different examples that are directly post-processed from the pyramid method output results in the section above. For each of the two image scenes below, the first image shows the post-process input image, the second is the vertical column cleaning stage, and the third is the horizontal border row cleaning stage. Please note that the cleaned sections of the borders are tough to see, so please click the image to zoom! 
 </p>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 12px; margin: 8px 0 12px;">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
-    <img src="assets/bw1/emir/vert_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01</figcaption>
+    <img src="assets/part2/emir/pyramid_out.jpg" alt="Bells and Whistles 1 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Input Image</figcaption>
   </figure>
   <figure style="margin: 0;">
     <img src="assets/bw1/emir/vert_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 02" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 02</figcaption>
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Vertically Cleaned Image</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bw1/emir/horiz_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 03</figcaption>
+    <img src="assets/bw1/emir/horiz_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Horizontally Cleaned Image Final Output</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bw1/emir/horiz_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 04" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 04</figcaption>
-  </figure>
-  <figure style="margin: 0;">
-    <img src="assets/bw1/church/vert_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 05" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 05</figcaption>
+    <img src="assets/part2/church/pyramid_out.jpg" alt="Bells and Whistles 1 result 05" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Input Image</figcaption>
   </figure>
   <figure style="margin: 0;">
     <img src="assets/bw1/church/vert_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 06" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 06</figcaption>
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Vertically Cleaned Image</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bw1/church/horiz_mask_pyramid_out.jpg" alt="Bells and Whistles 1 result 07" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 07</figcaption>
-  </figure>
-  <figure style="margin: 0;">
-    <img src="assets/bw1/church/horiz_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 08" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 08</figcaption>
+    <img src="assets/bw1/church/horiz_cleaned_pyramid_out.jpg" alt="Bells and Whistles 1 result 07" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Horizontally Cleaned Image Final Output</figcaption>
   </figure>
 </div>
 
@@ -400,20 +393,27 @@ In the images below, I have provided 2 different examples that are directly post
 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 14px 0 14px;">
 
 <h3 id="bells-2" style="font-size: 1.4rem; margin: 18px 0 8px;">Bells and Whistles 2: Deep Learning Fast Feature Matching</h3>
-<p style="margin: 0 0 10px; color: #334155;">Description of the second extra feature and its results.</p>
+<p style="margin: 0 0 10px; color: #334155;">
+
+Based on my significant recent experience using 'learned' feature extractors for Structure from Motion (specifically the hloc library), I decided to use a very fast, and efficient deep learning feature extractor called XFeat (accelerated features), and its 'LighterGlue' smart matching strategy. The inputs are exactly the same as the previous methods, except the two grayscale channel images are converted to RGB 3-channel format (even though visually the images are still grayscale). Then, using the pre-trained XFeat model loaded from PyTorch Hub, the function detects keypoints and computes descriptors for both images, extracting up to 4096 feature points per image. These features are then matched using XFeat's built-in LighterGlue matcher, which uses a lightweight neural network to find correspondences between the detected features. The function returns matched keypoint pairs from both images, requiring a minimum of 10 matches to proceed. If the visualization arg is enabled, it also displays the matches and draws a warped bounding box showing the estimated transformation.
+The alignment process in align_with_xfeat() takes the matched keypoint pairs and estimates a geometric transformation to align one channel to another. It uses RANSAC-based estimation of an affine transformation (specifically estimateAffinePartial2D from opencv), which allows for translation, rotation, and uniform scaling while being robust to outliers in the matches. The RANSAC algorithm iteratively finds the best transformation that satisfies the most inlier matches within a 5-pixel reprojection threshold. Once the transformation matrix is computed, it applies the transformation using cv2.warpAffine() to align the second image to the first. This provides us the blue-green or red-green alignment. After alignment, the three channels are stacked to create a color image. 
+The method is particularly effective because XFeat provides robust,  learning-based local features that are invariant to various transformations and can handle the challenges of aligning historical photographs where traditional pixel-intensity based feature detectors might struggle. The use of affine transformation provides a good balance between flexibility and stability, preventing unrealistic warping while still correcting for the typical misalignments found in these historical three-channel images. Finally, Xfeat is quite quick, even on CPU. In fact, it performed around 20 seconds faster than the pyramid method when doing a full run. Further, I didn't spend any time optimizing, so I think it could be even faster. 
+
+The images below show an input, the feature matching visualization, and the output
+</p>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 8px 0 12px;">
   <figure style="margin: 0;">
-    <img src="assets/bells2/result_01.jpg" alt="Bells and Whistles 2 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01</figcaption>
+    <img src="assets/bw2/service-pnp-prok-00100-00130v/red_green_matches.jpg" alt="Bells and Whistles 2 result 01" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 01 Xfeat Red Green Feature Matching Visualization</figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells2/result_02.jpg" alt="Bells and Whistles 2 result 02" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 02</figcaption>
+    <img src="assets/bw2/service-pnp-prok-00100-00130v/blue_green_matches.jpg" alt="Bells and Whistles 2 result 02" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 02 Xfeat Blue Green Feature Matching Visualization </figcaption>
   </figure>
   <figure style="margin: 0;">
-    <img src="assets/bells2/result_03.jpg" alt="Bells and Whistles 2 result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
-    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 03</figcaption>
+    <img src="assets/bw2/service-pnp-prok-00100-00130v/out_xfeat.jpg" alt="Bells and Whistles 2 result 03" style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #e5e7eb;">
+    <figcaption style="font-size: 0.9rem; color: #64748b; margin-top: 6px;">Result 03 Xfeat Matched Image</figcaption>
   </figure>
 </div>
 
