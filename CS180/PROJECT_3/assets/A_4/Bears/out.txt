@@ -1,0 +1,28 @@
+python3 Part-A/Code/mosaic.py Part-A/Images/Bears/ --n 6
+Found 3 images.
+Center image index: 1 (4.jpg)
+Finding Points for Image 0
+Finding Points for Center Image
+Showing correspondence verification...
+Calculating Homography Matrix
+Computed Homography Matrix:
+[[ 1.10596714e+00  1.50557145e-02 -1.73021348e+03]
+ [ 3.22255162e-02  1.13419403e+00  1.94257634e+02]
+ [ 2.67113480e-05  1.33429548e-05  1.00000000e+00]]
+Calculating Bilinear Image Warp
+  -> Warped image size: 4430 x 6007 (origin: (np.int64(-1731), np.int64(194)))
+Finding Points for Image 2
+Finding Points for Center Image
+Showing correspondence verification...
+Calculating Homography Matrix
+Computed Homography Matrix:
+[[ 6.27886267e-01 -9.36538310e-03  1.17606068e+03]
+ [-2.31602812e-01  7.83915153e-01  4.66872240e+02]
+ [-6.42962807e-05 -1.67825804e-05  1.00000000e+00]]
+Calculating Bilinear Image Warp
+  -> Warped image size: 4888 x 7012 (origin: (np.int64(1176), np.int64(-725)))
+Calculating Final Canvas Size
+Computing global bounding box...
+Canvas size: 7795 x 7012
+3it [00:03,  1.17s/it]
+Panorama Complete

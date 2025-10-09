@@ -1,0 +1,28 @@
+(base) python3 Part-A/Code/mosaic.py Part-A/Images/Meeting_Room/ --n 6
+Found 3 images.
+Center image index: 1 (IMG_1524.jpg)
+Finding Points for Image 0
+Finding Points for Center Image
+Showing correspondence verification...
+Calculating Homography Matrix
+Computed Homography Matrix:
+[[ 2.28295915e+00  9.86497906e-02 -5.34150670e+03]
+ [ 7.22662945e-01  1.96430129e+00 -2.09080462e+03]
+ [ 2.83751490e-04  1.65466493e-05  1.00000000e+00]]
+Calculating Bilinear Image Warp
+  -> Warped image size: 7508 x 10432 (origin: (np.int64(-5342), np.int64(-2091)))
+Finding Points for Image 2
+Finding Points for Center Image
+Showing correspondence verification...
+Calculating Homography Matrix
+Computed Homography Matrix:
+[[ 8.79112020e-01 -3.26996043e-03  1.52457005e+03]
+ [-1.49192544e-01  9.76215645e-01  2.69442845e+01]
+ [-4.65402129e-05  6.42737401e-07  1.00000000e+00]]
+Calculating Bilinear Image Warp
+  -> Warped image size: 5108 x 6937 (origin: (np.int64(1500), np.int64(-765)))
+Calculating Final Canvas Size
+Computing global bounding box...
+Canvas size: 11950 x 10432
+3it [00:06,  2.09s/it]
+Panorama Complete
