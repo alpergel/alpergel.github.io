@@ -94,6 +94,7 @@ Final row (constraint): [0, 0, 0, 0, 0, 0, 0, 0, 1]</p>
 
 </div>
 In matrix notation, the homography vector <b>h</b> can be solved directly as <b>h = A<sup>-1</sup> · b</b> (when A is invertible). However, since we usually want MORE than 4 points, we set this problem up as a least squares problem using the Numpy lstsq() function. However, we can get an even more optimized solution by taking advantage of some linear algebra knowledge with the SVD decomposition. The rightmost singular vector provides us with H, which we then reshape into a 3 x 3 matrix. 
+<hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 32px 0;">
 
 <br>
 As I was seeing some numerical stability issues, I researched some ways to improve consistency and homography stability, and stumbled upon the concept of Hartley normalization, which allows you to improve the condition number of the matrix (high condition number high instability and likely no proper solution). With Hartley normalization, the identified correspondance points are recentered and rescaled so that the overal linear system is balanced. Math below:
@@ -194,11 +195,13 @@ Using the two image warping techniques we made (Nearest Neighbor and Bilinear In
   <span style="font-size: 1.05rem; color: #64748b;">
     <b>Left:</b> Correspondance points bounding box. <b>Center:</b>Rectified output using Bilinear Interpolation. <b>Right:</b> Rectified output using Nearest Neighbor Warping.
   </span>
+  <br>
   <img src="assets/A_3/Poster/Screenshot 2025-10-08 200505.png" alt="Rectified Output (Bilinear Interpolation)" style="width: 60%; min-width: 420px; border-radius: 16px; border: 3px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
     <b>Left:</b> Correspondance points bounding box. <b>Center:</b>Rectified output using Bilinear Interpolation. <b>Right:</b> Rectified output using Nearest Neighbor Warping.
   </span>
+  <br>
 </p>
 
 
@@ -211,3 +214,103 @@ As is clear in the comparison images above, we can see that both images provide 
 <h3>Part A.4: Blend the Images Into a Mosaic</h3>
 For the panorama creation, I created a CLI that takes in a folder, the number of correspondances you want (default 4). The process then sorts the image files in the folder, selects the center index and starts to map all other images to that center image. It iterates through all the images that are not the center image, makes you provide a point correspondance between the image and the center image. Then the H matrix is calculated, which allows for the warp to be calculated. The warped image, validity mask, and origin of the new image are then appended to a list. Once all images in the folder have been warped properly, a global canvas for the pano is calculated, then the warped images are placed onto the canvas at their respective origin points. Finally we utilize feather blending to soften the edges between the placed images. I did put a laplacian stack blending implementation, but commented it out as it simply takes too long with more than 2+ images in a folder. For the same reason, I opted to use nearest neighbor warping for RAM and time efficiency during the panorama process. 
 
+<p align="center" style="margin: 36px 0;">
+  <img src="assets/A_4/Bears/Screenshot 2025-10-08 234126.png" alt="Panorama Example 1" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
+  <br>
+  <details>
+    <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
+    <pre style="white-space: pre-wrap; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; color: #0f172a; margin-top: 8px;">
+    python3 Part-A/Code/mosaic.py Part-A/Images/Bears/ --n 6
+    Found 3 images.
+    Center image index: 1 (4.jpg)
+    Finding Points for Image 0
+    Finding Points for Center Image
+    Showing correspondence verification...
+    Calculating Homography Matrix
+    Computed Homography Matrix:
+    [[ 1.10596714e+00  1.50557145e-02 -1.73021348e+03]
+    [ 3.22255162e-02  1.13419403e+00  1.94257634e+02]
+    [ 2.67113480e-05  1.33429548e-05  1.00000000e+00]]
+    Calculating Bilinear Image Warp
+      -> Warped image size: 4430 x 6007 (origin: (np.int64(-1731), np.int64(194)))
+    Finding Points for Image 2
+    Finding Points for Center Image
+    Showing correspondence verification...
+    Calculating Homography Matrix
+    Computed Homography Matrix:
+    [[ 6.27886267e-01 -9.36538310e-03  1.17606068e+03]
+    [-2.31602812e-01  7.83915153e-01  4.66872240e+02]
+    [-6.42962807e-05 -1.67825804e-05  1.00000000e+00]]
+    Calculating Bilinear Image Warp
+      -> Warped image size: 4888 x 7012 (origin: (np.int64(1176), np.int64(-725)))
+    Calculating Final Canvas Size
+    Computing global bounding box...
+    Canvas size: 7795 x 7012
+    3it [00:03,  1.17s/it]
+    Panorama Complete
+    </pre>
+  </details>
+
+  <img src="assets/A_4/Meeting_Room/panorama_meeting_rrom.png" alt="Panorama Example 2" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
+  <br>
+  <details>
+    <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
+    <pre style="white-space: pre-wrap; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; color: #0f172a; margin-top: 8px;">
+    (base) python3 Part-A/Code/mosaic.py Part-A/Images/Meeting_Room/ --n 6
+    Found 3 images.
+    Center image index: 1 (IMG_1524.jpg)
+    Finding Points for Image 0
+    Finding Points for Center Image
+    Showing correspondence verification...
+    Calculating Homography Matrix
+    Computed Homography Matrix:
+    [[ 2.28295915e+00  9.86497906e-02 -5.34150670e+03]
+    [ 7.22662945e-01  1.96430129e+00 -2.09080462e+03]
+    [ 2.83751490e-04  1.65466493e-05  1.00000000e+00]]
+    Calculating Bilinear Image Warp
+      -> Warped image size: 7508 x 10432 (origin: (np.int64(-5342), np.int64(-2091)))
+    Finding Points for Image 2
+    Finding Points for Center Image
+    Showing correspondence verification...
+    Calculating Homography Matrix
+    Computed Homography Matrix:
+    [[ 8.79112020e-01 -3.26996043e-03  1.52457005e+03]
+    [-1.49192544e-01  9.76215645e-01  2.69442845e+01]
+    [-4.65402129e-05  6.42737401e-07  1.00000000e+00]]
+    Calculating Bilinear Image Warp
+      -> Warped image size: 5108 x 6937 (origin: (np.int64(1500), np.int64(-765)))
+    Calculating Final Canvas Size
+    Computing global bounding box...
+    Canvas size: 11950 x 10432
+    3it [00:06,  2.09s/it]
+    Panorama Complete
+    </pre>
+  </details>
+
+  <img src="assets/A_4/Haas/Screenshot 2025-10-09 122820.png" alt="Panorama Example 3" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb;">
+  <br>
+  <details>
+    <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
+    <pre style="white-space: pre-wrap; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; color: #0f172a; margin-top: 8px;">
+    python3 Part-A/Code/mosaic.py Part-A/Images/Haas/ --n 8  
+    Found 2 images.
+    Center image index: 1 (2.jpg)
+    Finding Points for Image 0
+    Finding Points for Center Image
+    Showing correspondence verification...
+    Calculating Homography Matrix
+    Computed Homography Matrix:
+    [[ 1.09437525e+00  9.49213866e-03 -2.22045796e+03]
+    [ 1.15794764e-01  1.06255943e+00 -5.85197716e+02]
+    [ 2.34247713e-05 -5.66387522e-06  1.00000000e+00]]
+    Calculating Bilinear Image Warp
+      -> Warped image size: 4601 x 6254 (origin: (np.int64(-2239), np.int64(-586)))
+    Calculating Final Canvas Size
+    Computing global bounding box...
+    Canvas size: 6523 x 6298
+    2it [00:02,  1.21s/it]
+    Panorama Complete
+    </pre>
+    
+  </details>
+</p>
