@@ -1,5 +1,6 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
@@ -470,29 +471,49 @@ Here, I visualized the difference between simple Feather blending and the more a
   </style>
 
   <script type="text/javascript">
-    // Requires 'JSZip' library on the page to work in non-GitHub Markdown viewers.
     async function downloadAsZip(imgs, setName) {
+      // Check if JSZip is available
       if (typeof JSZip === "undefined") {
-        alert('Bulk download is not available in this viewer. Please download manually.');
+        alert('JSZip library is loading. Please wait a moment and try again.');
         return;
       }
-      const zip = new JSZip();
-      for (const file of imgs) {
-        try {
-          const response = await fetch(file.path);
-          if (!response.ok) throw new Error();
-          const blob = await response.blob();
-          zip.file(file.name, blob);
-        } catch {
-          // fallback to empty file
-          zip.file(file.name, "");
+      
+      try {
+        const zip = new JSZip();
+        let successCount = 0;
+        
+        for (const file of imgs) {
+          try {
+            const response = await fetch(file.path);
+            if (!response.ok) throw new Error(`Failed to fetch ${file.name}`);
+            const blob = await response.blob();
+            zip.file(file.name, blob);
+            successCount++;
+          } catch (error) {
+            console.warn(`Could not fetch ${file.name}:`, error);
+            // Add a placeholder file with error info
+            zip.file(file.name + '.error', `Could not download: ${file.name}`);
+          }
         }
+        
+        if (successCount === 0) {
+          alert('No files could be downloaded. Please check your internet connection.');
+          return;
+        }
+        
+        const content = await zip.generateAsync({ type: "blob" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(content);
+        a.download = setName + "_inputs.zip";
+        a.click();
+        
+        // Clean up the URL object
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        
+      } catch (error) {
+        console.error('Download failed:', error);
+        alert('Download failed. Please try again or download files manually.');
       }
-      const content = await zip.generateAsync({ type: "blob" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(content);
-      a.download = setName + "_inputs.zip";
-      a.click();
     }
   </script>
 
