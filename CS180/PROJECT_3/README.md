@@ -20,7 +20,7 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 <h2 id="required-part-1">Section A</h2>
 <h3>Part A.1: Shoot the Pictures</h3>
 <p style="margin: 0 0 10px; color: #334155;">
-The following images were captured on an iPhone 16 by starting on the center image, then while keeping my body and arms in place, slightly rotating the phone itself left and right from the center pose. Further, a leveling indicator was utilized to make sure each image had approx the sane COP.
+The following images were captured on an iPhone 16 by starting on the center image, then while keeping my body and arms in place, slightly rotating the phone itself left and right from the center pose. Further, a leveling indicator was utilized to make sure each image had approximately the same COP.
 <p style="margin: 0 0 10px; color: #334155;">
 <p style="margin: 32px 0;">
   <img src="assets/A_1/CITRIS_Room/IMG_1534.jpg" alt="Set 1 - Image 1" style="width: 40%; min-width: 120px; border-radius: 10px; border: 1.5px solid #e5e7eb; margin-right: 2%;">
@@ -94,11 +94,11 @@ Row 2i+1: [0, 0, 0, xᵢ, yᵢ, 1, -vᵢxᵢ, -vᵢyᵢ, -vᵢ]</p>
 Final row (constraint): [0, 0, 0, 0, 0, 0, 0, 0, 1]</p>
 
 </div>
-In matrix notation, the homography vector <b>h</b> can be solved directly as <b>h = A<sup>-1</sup> · b</b> (when A is invertible). However, since we usually want MORE than 4 points, we set this problem up as a least squares problem using the Numpy lstsq() function. However, we can get an even more optimized solution by taking advantage of some linear algebra knowledge with the SVD decomposition. The rightmost singular vector provides us with H, which we then reshape into a 3 x 3 matrix. 
+In matrix notation, the homography vector <b>h</b> can be solved directly as <b>h = A<sup>-1</sup> · b</b> (when A is invertible). However, since we usually want more than 4 points, we set this problem up as a least squares problem using the Numpy lstsq() function. Alternatively, we can get an even more optimized solution by taking advantage of the SVD decomposition. The right singular vector corresponding to the smallest singular value provides us with H, which we then reshape into a 3 x 3 matrix. This SVD method is what I moved forward with in my code, due to how much faster it was.
 <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 32px 0;">
 
 <br>
-As I was seeing some numerical stability issues, I researched some ways to improve consistency and homography stability, and stumbled upon the concept of Hartley normalization, which allows you to improve the condition number of the matrix (high condition number high instability and likely no proper solution). With Hartley normalization, the identified correspondance points are recentered and rescaled so that the overal linear system is balanced. Math below:
+As I was seeing some numerical stability issues, I researched some ways to improve consistency and homography stability, and stumbled upon the concept of Hartley normalization, which allows you to improve the condition number of the matrix (high condition number means high instability and likely no proper solution). With Hartley normalization, the identified correspondence points are recentered and rescaled so that the overall linear system is balanced. Math below:
 <div style="background: #18181b; color: #f1f5f9; border-radius: 12px; padding: 24px; margin: 24px 0; font-size: 1.08rem;">
   <b>Hartley Normalization (Point Normalization for Homography)</b>
   <br><br>
@@ -156,7 +156,7 @@ As I was seeing some numerical stability issues, I researched some ways to impro
   <img src="assets/A_2/CITRIS_Room/correspondance.png" alt="Set 2 - Image 1" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right: 2%;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Set 1:</b> Visualization of Correspondance Points.
+    <b>Set 1:</b> Visualization of Correspondence Points.
   </span>
 </p>
 <p><strong>Set 1 Homography Matrix:</strong></p>
@@ -168,7 +168,7 @@ As I was seeing some numerical stability issues, I researched some ways to impro
   <img src="assets/A_2/Meeting_Room/correspondance.png" alt="Set 2 - Image 1" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right: 2%;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Set 2:</b> Visualization of Correspondance Points.
+    <b>Set 2:</b> Visualization of Correspondence Points.
   </span>
 </p>
 <p><strong>Set 2 Homography Matrix:</strong></p>
@@ -194,13 +194,13 @@ Using the two image warping techniques we made (Nearest Neighbor and Bilinear In
   <img src="assets/A_3/CITRIS_Sign/Screenshot 2025-10-08 200557.png" alt="Rectified Output (Nearest Neighbor)" style="width: 60%; min-width: 420px; border-radius: 16px; border: 3px solid #e5e7eb; margin-right: 3%;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Left:</b> Correspondance points bounding box. <b>Center:</b>Rectified output using Bilinear Interpolation. <b>Right:</b> Rectified output using Nearest Neighbor Warping.
+    <b>Left:</b> Correspondence points bounding box. <b>Center:</b> Rectified output using Bilinear Interpolation. <b>Right:</b> Rectified output using Nearest Neighbor Warping.
   </span>
   <br>
   <img src="assets/A_3/Poster/Screenshot 2025-10-08 200505.png" alt="Rectified Output (Bilinear Interpolation)" style="width: 60%; min-width: 420px; border-radius: 16px; border: 3px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Left:</b> Correspondance points bounding box. <b>Center:</b>Rectified output using Bilinear Interpolation. <b>Right:</b> Rectified output using Nearest Neighbor Warping.
+    <b>Left:</b> Correspondence points bounding box. <b>Center:</b> Rectified output using Bilinear Interpolation. <b>Right:</b> Rectified output using Nearest Neighbor Warping.
   </span>
   <br>
 </p>
@@ -208,12 +208,12 @@ Using the two image warping techniques we made (Nearest Neighbor and Bilinear In
 
 
 <p style="margin: 0 0 10px; color: #334155;">
-As is clear in the comparison images above, we can see that both images provide a successfully rectified rectangular object output, however, the bilinear interpolation offers higher visual quality. It is worthwhile to note that Nearest Neighbor approach is considerably faster than the Bilinear Interpolation approach. 
+As is clear in the comparison images above, we can see that both methods provide a successfully rectified rectangular object output; however, the bilinear interpolation offers higher visual quality. It is worthwhile to note that the Nearest Neighbor approach is considerably faster than the Bilinear Interpolation approach. 
 
 </p>
 
 <h3>Part A.4: Blend the Images Into a Mosaic</h3>
-For the panorama creation, I created a CLI that takes in a folder, the number of correspondances you want (default 4). The process then sorts the image files in the folder, selects the center index and starts to map all other images to that center image. It iterates through all the images that are not the center image, makes you provide a point correspondance between the image and the center image. Then the H matrix is calculated, which allows for the warp to be calculated. The warped image, validity mask, and origin of the new image are then appended to a list. Once all images in the folder have been warped properly, a global canvas for the pano is calculated, then the warped images are placed onto the canvas at their respective origin points. Finally we utilize feather blending to soften the edges between the placed images. I did put a laplacian stack blending implementation, but commented it out as it simply takes too long with more than 2+ images in a folder. For the same reason, I opted to use nearest neighbor warping for RAM and time efficiency during the panorama process. 
+For the panorama creation, I created a CLI that takes in a folder and the number of correspondences you want (default 4). The process then sorts the image files in the folder, selects the center index, and starts to map all other images to that center image. It iterates through all the images that are not the center image and prompts you to provide a point correspondence between the image and the center image. Then the H matrix is calculated, which allows for the warp to be computed. The warped image, validity mask, and origin of the new image are then appended to a list. Once all images in the folder have been warped properly, a global canvas for the panorama is calculated, then the warped images are placed onto the canvas at their respective origin points. Finally, we utilize feather blending to soften the edges between the placed images. I implemented a Laplacian stack blending feature, but commented it out as it simply takes too long with 2+ images in a folder. For the same reason, I opted to use nearest neighbor warping for RAM and time efficiency during the panorama process. 
 
 <p style="margin: 36px 0;">
   <img src="assets/B4/Bears/Bear_Manual.png" alt="Panorama Example 1" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
@@ -318,7 +318,7 @@ For the panorama creation, I created a CLI that takes in a folder, the number of
 <h2 id="required-part-2">Section B</h2>
 
 <h3>Part B.1: Harris Corner Detection</h3>
-The Harris corner detection process begins by converting the image to grayscale. We then compute the image gradients in the x and y directions using the Sobel kernels (shown below). With these gradients, we calculate the products Ix², Iy², and IxIy at each pixel. To smooth these values, a Gaussian blur (low-pass filter) is applied to each of Ixx, Iyy, and Ixy. After smoothing, we construct the Harris matrix at every pixel and compute its response using the formula: R = det(M) - k · (trace(M))², where M is the 2x2 matrix of the blurred gradient products and k is a constant parameter.
+The Harris corner detection process begins by converting the image to grayscale. We then compute the image gradients in the x and y directions using the Sobel kernels (shown below). With these gradients, we calculate the products Ix * Ix, Iy * Iy, and Ix * Iy at each pixel. To smooth these values, a Gaussian blur (low-pass filter) is applied to each of Ix * Ix, Iy * Iy, and Ix * Iy. After smoothing, we construct the Harris matrix at every pixel and compute its response using the formula: R = det(M) - k · (trace(M))², where M is the 2x2 matrix of the blurred gradient products and k is a constant parameter.
 
 
 <p style="margin: 0 0 10px; color: #334155;">
@@ -347,7 +347,7 @@ $$
 
 </div>
 
-However, since harris corner detector can give an overwhelming amount of points in near-proximity to each other, we need to apply an NMS to the output of the harris detector. We apply a threshold based on a percentage of the maximum response value from the Harris detector, and we identify all candidate points that exceed this threshold. These candidates are then sorted in descending order by their response strength scores, ensuring that we are guaranteed to use the strongest features. Then, we iterate through the candidate points by adding the next coord in the list to the final output list, and removing all nearby candidates to that current coord within a specified radius to prevent dense clusters of points. When we activate adaptive NMS, points with stronger response values get a larger suppression radius, which distributes points more evenly across the image. Finally, to calculate the radial distance, we just use l2 distance for efficiency, and points are kept ONLY if theyre farther than the suppression radius. 
+However, since the Harris corner detector can give an overwhelming amount of points in near-proximity to each other, we need to apply an NMS (Non-Maximum Suppression) to the output of the Harris detector. We apply a threshold based on a percentage of the maximum response value from the Harris detector, and we identify all candidate points that exceed this threshold. These candidates are then sorted in descending order by their response strength scores, ensuring that we are guaranteed to use the strongest features. Then, we iterate through the candidate points by adding the next coordinate in the list to the final output list, and removing all nearby candidates to that current coordinate within a specified radius to prevent dense clusters of points. When we activate adaptive NMS, points with stronger response values get a larger suppression radius, which distributes points more evenly across the image. Finally, to calculate the radial distance, we use L2 distance for efficiency, and points are kept only if they're farther than the suppression radius. 
 
 In the images below, we compare the Non-Adaptive Non-Maximal Suppression Harris Response and the Adaptive Non-Maximal Suppression Harris Response.
 
@@ -382,7 +382,7 @@ In the images below, we compare the Non-Adaptive Non-Maximal Suppression Harris 
 
 
 <h3>Part B.2: Feature Descriptor Extraction</h3>
-To extract the feature descriptors we take the image, convert it to grayscale, then pad it so that we can use 40x40 window size sampling without any issues. Then we adjust the corner positions based off the padding. Next, we iterate through all the corners output from the harris corner + NMS then get 40 x 40 patches with the corner as its centroid. Then, we just apply a blur on it, and downsample to 8x8 and bias/gain normalize it. After iterating through all the corners, we get some patches that look like the following images:
+To extract the feature descriptors, we take the image, convert it to grayscale, then pad it so that we can use 40x40 window size sampling without any issues. Then we adjust the corner positions based on the padding. Next, we iterate through all the corners output from the Harris corner + NMS, then get 40 x 40 patches with the corner as its centroid. Then, we just apply a blur on it, downsample to 8x8, and bias/gain normalize it. After iterating through all the corners, we get some patches that look like the following images:
 
 
 <p style="margin: 32px 0;">
@@ -391,16 +391,16 @@ To extract the feature descriptors we take the image, convert it to grayscale, t
   <img src="assets/B2/MR_patch2.png" alt="Feature Descriptors 3" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Feature Descriptors:</b> Extracted 8x8 normalized feature descriptors from three different images. For each, Top row shows 40x40 grayscale window patch, Second row shows 8x8 downsampled and blurred window, and third row shows mean/gain adjusted 8x8 patch, which we use as the final descriptor. Due to matplotlib bounds, there isnt a visible difference between rows 2 and 3, but the gain/mean normalization helped the matching process substantially. Bear Image (First), CITRIS Room Image (Second), Meeting Room Image (Third)
+    <b>Feature Descriptors:</b> Extracted 8x8 normalized feature descriptors from three different images. For each, the top row shows the 40x40 grayscale window patch, the second row shows the 8x8 downsampled and blurred window, and the third row shows the mean/gain adjusted 8x8 patch, which we use as the final descriptor. Due to matplotlib render bounds, there isn't a visible difference between rows 2 and 3, but the gain/mean normalization helped the matching process substantially. Bear Image (First), CITRIS Room Image (Second), Meeting Room Image (Third)
   </span>
 </p>
 
 <h3>Part B.3: Feature Matching</h3>
 
 <p style="margin: 0 0 10px; color: #334155;">
-To do feature matching, I implemented the "nn_match" function, which simply implements nearest neighbor matching between the two sets of image patches using Lowe's ratio test. First it preprocesses and flattens both sets of patches into 2D arrays, then computes the pairwise distances between all patches from set A and set B using the matrix operation optimized dist2 function that was given. For each patch in A, it essentially finds the two nearest neighbors in B and applies Lowe's ratio test. This test keeps only matches where the dist to the closest neighbor is less than 0.75 times the dist to the second-closest neighbor (lets us filter out the ambiguous matches). This is what Prof. Efros described in class as the Russian Grandma test where if one coord has two possibly good solutions, then it has no good solutions. Finally, it returns an array containing the indices of matching patches from both sets along with their distances, sorted from best to worst match quality. 
+To do feature matching, I implemented the "nn_match" function, which simply implements nearest neighbor matching between the two sets of image patches using Lowe's ratio test. First, it preprocesses and flattens both sets of patches into 2D arrays, then computes the pairwise distances between all patches from set A and set B using the matrix operation optimized dist2 function that was given. For each patch in A, it essentially finds the two nearest neighbors in B and applies Lowe's ratio test. This test keeps only matches where the distance to the closest neighbor is less than 0.75 times the distance to the second-closest neighbor (allowing us to filter out the ambiguous matches). This is what Prof. Efros described in class as the Russian Grandma test, where if one point has two possibly good solutions, then it has no good solutions. Finally, it returns an array containing the indices of matching patches from both sets along with their distances, sorted from best to worst match quality. 
 
-Some notes: I could've used vector-optimized KNN implementations (e.g. scikit-learn) for a faster and better solution, but I wanted to try to do it manually. As you'll notice in the correspondance images below, there are a lot of noisy matches, almost all of which fail to get past the next RANSAC step. However, with some experimentation I found that even slightly increasing the patch size considerably lowered noisy results, so if compute is available, it would be a good idea to increase patch size, and mess with the Lowe ratio to avoid false positive correspondances. 
+Some notes: I could've used vector-optimized KNN implementations (e.g., scikit-learn) for a faster and better solution, but I wanted to try to do it manually. As you'll notice in the correspondence images below, there are a lot of noisy matches, almost all of which fail to get past the next RANSAC step. However, with some experimentation I found that even slightly increasing the patch size considerably lowered noisy results, so if compute is available, it would be a good idea to increase patch size and adjust the Lowe ratio to avoid false positive correspondences. 
 
 
 <p style="margin: 32px 0;">
@@ -423,7 +423,7 @@ For each iteration:
   <li>Keep largest set of inliers</li>
   <li>If iteration count met, break out of the loop then re-compute least-squares H estimate on all inliers. If not, repeat</li>
 </ol>
-Once the RANSAC functionality was working, I noticed significant amount of noisy correspondances remaining, so I increased its input eps value to 3.0, and iterations to 700.
+Once the RANSAC functionality was working, I noticed a significant amount of noisy correspondences remaining, so I increased its input eps value to 3.0 and iterations to 700.
 
 <p style="margin: 44px 0 24px 0; font-size: 1.25rem; color: #1e293b;">
   <b>Part B.5: Feather Blending vs. Laplacian Pyramid Blending</b>
@@ -618,7 +618,7 @@ Here, I visualized the difference between simple Feather blending and the more a
 </div>
 
 <p style="margin-top:20px; font-size: 1.05rem; color: #64748b;">
-  <b>Observations:</b> In all cases, Laplacian Pyramid blending produces smoother, more seamless composites compared to the visible seams or ghosting that can occur with Feather blending, especially when there are strong edges or exposure differences. However, I noticed an odd bug that I could not solve, where the borders of the last image added during the panorama blending process does not have its outer borders blurred, resulting in the sharp and blurred edge difference. However, it seems this bug does not negatively affect the actual blended seam between the colored parts of the panorama images.
+  <b>Observations:</b> In all cases, Laplacian Pyramid blending produces smoother, more seamless composites compared to the visible seams or ghosting that can occur with Feather blending, especially when there are strong edges or exposure differences. However, I noticed an odd bug that I could not solve, where the borders of the last image added during the panorama blending process do not have its outer borders blurred, resulting in the sharp and blurred edge difference. However, it seems this bug does not negatively affect the actual blended seam between the colored parts of the panorama images.
 </p>
 
 
