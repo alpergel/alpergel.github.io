@@ -395,26 +395,34 @@ To extract the feature descriptors we take the image, convert it to grayscale, t
 <h3>Part B.3: Feature Matching</h3>
 
 <p style="margin: 0 0 10px; color: #334155;">
-Implement Feature Matching (referencing "Section 5 of the paper"). This involves finding pairs of features that are similar and likely to be good matches. For thresholding, use Lowe's approach: thresholding on the ratio between the first and second nearest neighbors. Consult "Figure 6b in the paper" for picking the threshold and ignore "Section 6 of the paper."
-</p>
+To do feature matching, I implemented the "nn_match" function, which simply implements nearest neighbor matching between the two sets of image patches using Lowe's ratio test. First it preprocesses and flattens both sets of patches into 2D arrays, then computes the pairwise distances between all patches from set A and set B using the matrix operation optimized dist2 function that was given. For each patch in A, it essentially finds the two nearest neighbors in B and applies Lowe's ratio test. This test keeps only matches where the dist to the closest neighbor is less than 0.75 times the dist to the second-closest neighbor (lets us filter out the ambiguous matches). This is what Prof. Efros described in class as the Russian Grandma test where if one coord has two possibly good solutions, then it has no good solutions. Finally, it returns an array containing the indices of matching patches from both sets along with their distances, sorted from best to worst match quality. 
 
-<p><strong>Deliverables:</strong> Show matched features between image pairs.</p>
+Some notes: I could've used vector-optimized KNN implementations (e.g. scikit-learn) for a faster and better solution, but I wanted to try to do it manually. As you'll notice in the correspondance images below, there are a lot of noisy matches, almost all of which fail to get past the next RANSAC step. However, with some experimentation I found that even slightly increasing the patch size considerably lowered noisy results, so if compute is available, it would be a good idea to increase patch size, and mess with the Lowe ratio to avoid false positive correspondances. 
+
 
 <p style="margin: 32px 0;">
-  <img src="assets/B_3/feature_matches.png" alt="Feature Matching" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <img src="assets/B3/bear_correspondance.png" alt="Feature Descriptors 1" style="width: 70%; min-width: 520px; border-radius: 26px; border: 5px solid #e5e7eb; margin-right:3%;">
+  <img src="assets/B3/citris_correspondance.png" alt="Feature Descriptors 2" style="width: 70%; min-width: 520px; border-radius: 26px; border: 5px solid #e5e7eb; margin-right:3%; margin-top: 24px;">
+  <img src="assets/B3/MR_correspondance.png" alt="Feature Descriptors 3" style="width: 70%; min-width: 520px; border-radius: 26px; border: 5px solid #e5e7eb; margin-top: 24px;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Feature Matching:</b> Matched features between image pairs using Lowe's ratio test.
+    <b>Feature Matching:</b> Matched features between three different image pairs using Lowe's ratio test. Bear Image (First), CITRIS Room Image (Second), Meeting Room Image (Third)
   </span>
 </p>
-
 <h3>Part B.4: RANSAC for Robust Homography</h3>
+In order to carry out the RANSAC functionality, I followed the ordering outlined during lecture as shown below.
 
-<p style="margin: 0 0 10px; color: #334155;">
-For "step 4", use 4-point RANSAC as described in class to compute robust homography estimates. Then, produce mosaics by adapting code from "Part A". You can use the same images from Part A but must show both manually and automatically stitched results side by side. Produce at least three mosaics.
-</p>
+For each iteration:
+<ol>
+  <li>Select 4 feature pairs (at random)</li>
+  <li>Compute Homography H</li>
+  <li>Compute Inliers where dist(p',Hp) < eps</li>
+  <li>Keep largest set of inliers</li>
+  <li>If iteration count met, break out of the loop then re-compute least-squares H estimate on all inliers. If not, repeat</li>
+</ol>
+Once the RANSAC functionality was working, I noticed significant amount of noisy correspondances remaining, so I increased its input eps value to 3.0, and iterations to 700.
 
-<p><strong>Deliverables:</strong> Implement 4-point RANSAC from scratch. Show comparison of stitching manually and automatically. Create >=3 automatic mosaics.</p>
+
 
 <p style="margin: 32px 0;">
   <img src="assets/B_4/manual_vs_automatic.png" alt="Manual vs Automatic Stitching" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
