@@ -386,9 +386,9 @@ To extract the feature descriptors we take the image, convert it to grayscale, t
 
 
 <p style="margin: 32px 0;">
-  <img src="assets/B2/bear_patches.png" alt="Feature Descriptors 1" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right:2%;">
-  <img src="assets/B2/CITRIS_Room_patches.png" alt="Feature Descriptors 2" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right:2%;">
-  <img src="assets/B2/MR_patches.png" alt="Feature Descriptors 3" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <img src="assets/B2/bear_patch2.png" alt="Feature Descriptors 1" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right:2%;">
+  <img src="assets/B2/CITRIS_Room_patch2.png" alt="Feature Descriptors 2" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right:2%;">
+  <img src="assets/B2/MR_patch2.png" alt="Feature Descriptors 3" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
     <b>Feature Descriptors:</b> Extracted 8x8 normalized feature descriptors from three different images. For each, Top row shows 40x40 grayscale window patch, Second row shows 8x8 downsampled and blurred window, and third row shows mean/gain adjusted 8x8 patch, which we use as the final descriptor. Due to matplotlib bounds, there isnt a visible difference between rows 2 and 3, but the gain/mean normalization helped the matching process substantially. Bear Image (First), CITRIS Room Image (Second), Meeting Room Image (Third)
