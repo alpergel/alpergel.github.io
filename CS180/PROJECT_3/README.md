@@ -324,7 +324,8 @@ The Harris corner detection process begins by converting the image to grayscale.
 The Sobel gradient kernels used for detecting corners are:
 </p>
 
-<pre style="background: #f8fafc; border-radius: 8px; border-left: 4px solid #0ea5e9; padding: 16px;">
+<div style="background: #f8fafc; border-radius: 8px; border-left: 4px solid #0ea5e9; padding: 16px; margin: 16px 0;">
+
 $$
 s_x =
 \begin{bmatrix}
@@ -342,7 +343,8 @@ s_y =
 1 & 2 & 1 \\
 \end{bmatrix}
 $$
-</pre>
+
+</div>
 
 However, since harris corner detector can give an overwhelming amount of points in near-proximity to each other, we need to apply an NMS to the output of the harris detector. We apply a threshold based on a percentage of the maximum response value from the Harris detector, and we identify all candidate points that exceed this threshold. These candidates are then sorted in descending order by their response strength scores, ensuring that we are guaranteed to use the strongest features. Then, we iterate through the candidate points by adding the next coord in the list to the final output list, and removing all nearby candidates to that current coord within a specified radius to prevent dense clusters of points. When we activate adaptive NMS, points with stronger response values get a larger suppression radius, which distributes points more evenly across the image. Finally, to calculate the radial distance, we just use l2 distance for efficiency, and points are kept ONLY if theyre farther than the suppression radius. 
 
