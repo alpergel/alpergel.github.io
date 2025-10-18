@@ -350,24 +350,24 @@ In the images below, we compare the Non-Adaptive Non-Maximal Suppression Harris 
 
 <p style="margin: 0 0 10px; color: #334155;">
 <p style="margin: 32px 0;">
-  <img src="assets/B1/no_ANMS.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
-  <img src="assets/B1/ANMS.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
+  <img src="assets/B1/HAAS_NO_ANMSv2.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
+  <img src="assets/B1/HAAS_ANMSv2.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
     <b>No ANMS</b> (top) vs <b>ANMS</b> (bottom)
   </span>
 </p>
 <p style="margin: 32px 0;">
-  <img src="assets/B1/MR_no_ANMS.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
-  <img src="assets/B1/MR_ANMS.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
+  <img src="assets/B1/MR_NO_ANMSv2.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
+  <img src="assets/B1/MR_ANMSv2.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
     <b>No ANMS</b> (top) vs <b>ANMS</b> (bottom)
   </span>
 </p>
 <p style="margin: 32px 0;">
-  <img src="assets/B1/citris_no_ANMS.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
-  <img src="assets/B1/citris_ANMS.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
+  <img src="assets/B1/CITRIS_NO_ANMSv2.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
+  <img src="assets/B1/CITRIS_ANMSv2.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
     <b>No ANMS</b> (top) vs <b>ANMS</b> (bottom)
