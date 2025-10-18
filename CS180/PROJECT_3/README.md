@@ -4,7 +4,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<div style="max-width: 1100px; margin: 0; padding: 12px 18px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; color: #0f172a; line-height: 1.6;">
+<div style="max-width: 1100px; margin: 0 auto; padding: 12px 18px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; color: #0f172a; line-height: 1.6;">
 <style>
 /* Gallery appearance: rounded black frame; non-white inner background; images stay square */
 figure { background: #f1f5f9; padding: 6px; border: 1px solid #000; border-radius: 10px; }
@@ -13,8 +13,13 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 #img-lightbox-img { border-radius: 0 !important; border: 1px solid #000 !important; box-shadow: none !important; }
 </style>
 
+<p align="center" style="margin: 0 0 10px;">
+  <img src="https://img.shields.io/badge/CS180-Project%203-5B8DEF?style=for-the-badge" alt="CS180 Project 3 badge">
+</p>
 
-<h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0.2rem 0 0.4rem; letter-spacing: 0.3px; background: linear-gradient(90deg, #5B8DEF, #A78BFA); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Project 3 </h2>
+<h2 align="center" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0.2rem 0 0.4rem; letter-spacing: 0.3px; background: linear-gradient(90deg, #5B8DEF, #A78BFA); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Alper Gel — Project 3</h2>
+
+<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 12px 0 16px;">
 
 
 <h2 id="required-part-1">Section A</h2>
