@@ -3,7 +3,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<div style="max-width: 1100px; margin: 0 auto; padding: 12px 18px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; color: #0f172a; line-height: 1.6;">
+<div style="max-width: 1100px; margin: 0; padding: 12px 18px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; color: #0f172a; line-height: 1.6;">
 <style>
 /* Gallery appearance: rounded black frame; non-white inner background; images stay square */
 figure { background: #f1f5f9; padding: 6px; border: 1px solid #000; border-radius: 10px; }
@@ -13,7 +13,7 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 </style>
 
 
-<h2 align="center" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0.2rem 0 0.4rem; letter-spacing: 0.3px; background: linear-gradient(90deg, #5B8DEF, #A78BFA); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Alper Gel — Project 3</h2>
+<h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0.2rem 0 0.4rem; letter-spacing: 0.3px; background: linear-gradient(90deg, #5B8DEF, #A78BFA); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Alper Gel — Project 3</h2>
 
 
 <h2 id="required-part-1">Section A</h2>
@@ -21,7 +21,7 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 <p style="margin: 0 0 10px; color: #334155;">
 The following images were captured on an iPhone 16 by starting on the center image, then while keeping my body and arms in place, slightly rotating the phone itself left and right from the center pose. Further, a leveling indicator was utilized to make sure each image had approx the sane COP.
 <p style="margin: 0 0 10px; color: #334155;">
-<p align="center" style="margin: 32px 0;">
+<p style="margin: 32px 0;">
   <img src="assets/A_1/CITRIS_Room/IMG_1534.jpg" alt="Set 1 - Image 1" style="width: 40%; min-width: 120px; border-radius: 10px; border: 1.5px solid #e5e7eb; margin-right: 2%;">
   <img src="assets/A_1/CITRIS_Room/IMG_1535.jpg" alt="Set 1 - Image 2" style="width: 40%; min-width: 120px; border-radius: 10px; border: 1.5px solid #e5e7eb;">
   <br>
@@ -30,7 +30,7 @@ The following images were captured on an iPhone 16 by starting on the center ima
   </span>
 </p>
 
-<p align="center" style="margin: 32px 0;">
+<p style="margin: 32px 0;">
   <img src="assets/A_1/Meeting_Room/IMG_1523.jpg" alt="Set 2 - Image 1" style="width: 40%; min-width: 120px; border-radius: 10px; border: 1.5px solid #e5e7eb; margin-right: 2%;">
   <img src="assets/A_1/Meeting_Room/IMG_1524.jpg" alt="Set 2 - Image 2" style="width: 40%; min-width: 120px; border-radius: 10px; border: 1.5px solid #e5e7eb;">
   <br>
@@ -151,7 +151,7 @@ As I was seeing some numerical stability issues, I researched some ways to impro
 
 
 
-<p align="center" style="margin: 32px 0;">
+<p style="margin: 32px 0;">
   <img src="assets/A_2/CITRIS_Room/correspondance.png" alt="Set 2 - Image 1" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right: 2%;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
@@ -163,7 +163,7 @@ As I was seeing some numerical stability issues, I researched some ways to impro
  [-3.61015852e-01 -4.24241792e-01  3.03414021e+03]
  [-1.03412057e-04 -1.59095473e-04  1.00000000e+00]]
 </code></pre>
-<p align="center" style="margin: 32px 0;">
+<p style="margin: 32px 0;">
   <img src="assets/A_2/Meeting_Room/correspondance.png" alt="Set 2 - Image 1" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right: 2%;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
@@ -189,7 +189,7 @@ Using the two image warping techniques we made (Nearest Neighbor and Bilinear In
   <li>Apply the inverse Homography Matrix and chosen warping method (Nearest Neighbor or Bilinear Interpolation) to output the rectified rectangular object (see below)</li>
 </ol>
 </p>
-<p align="center" style="margin: 32px 0;">
+<p style="margin: 32px 0;">
   <img src="assets/A_3/CITRIS_Sign/Screenshot 2025-10-08 200557.png" alt="Rectified Output (Nearest Neighbor)" style="width: 60%; min-width: 420px; border-radius: 16px; border: 3px solid #e5e7eb; margin-right: 3%;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
@@ -214,7 +214,7 @@ As is clear in the comparison images above, we can see that both images provide 
 <h3>Part A.4: Blend the Images Into a Mosaic</h3>
 For the panorama creation, I created a CLI that takes in a folder, the number of correspondances you want (default 4). The process then sorts the image files in the folder, selects the center index and starts to map all other images to that center image. It iterates through all the images that are not the center image, makes you provide a point correspondance between the image and the center image. Then the H matrix is calculated, which allows for the warp to be calculated. The warped image, validity mask, and origin of the new image are then appended to a list. Once all images in the folder have been warped properly, a global canvas for the pano is calculated, then the warped images are placed onto the canvas at their respective origin points. Finally we utilize feather blending to soften the edges between the placed images. I did put a laplacian stack blending implementation, but commented it out as it simply takes too long with more than 2+ images in a folder. For the same reason, I opted to use nearest neighbor warping for RAM and time efficiency during the panorama process. 
 
-<p align="center" style="margin: 36px 0;">
+<p style="margin: 36px 0;">
   <img src="assets/A_4/Bears/Screenshot 2025-10-08 234126.png" alt="Panorama Example 1" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
   <br>
   <details>
@@ -313,4 +313,137 @@ For the panorama creation, I created a CLI that takes in a folder, the number of
     </pre>
     
   </details>
+</p>
+<h2 id="required-part-2">Section B</h2>
+
+<h3>Part B.1: Harris Corner Detection</h3>
+The Harris corner detection process begins by converting the image to grayscale. We then compute the image gradients in the x and y directions using the Sobel kernels (shown below). With these gradients, we calculate the products Ix², Iy², and IxIy at each pixel. To smooth these values, a Gaussian blur (low-pass filter) is applied to each of Ixx, Iyy, and Ixy. After smoothing, we construct the Harris matrix at every pixel and compute its response using the formula: R = det(M) - k · (trace(M))², where M is the 2x2 matrix of the blurred gradient products and k is a constant parameter.
+
+
+<p style="margin: 0 0 10px; color: #334155;">
+The Sobel gradient kernels used for detecting corners are:
+</p>
+
+<pre style="background: #f8fafc; border-radius: 8px; border-left: 4px solid #0ea5e9; padding: 16px;">
+$$
+s_x =
+\begin{bmatrix}
+-1 & 0 & 1 \\
+-2 & 0 & 2 \\
+-1 & 0 & 1 \\
+\end{bmatrix}
+$$
+
+$$
+s_y =
+\begin{bmatrix}
+-1 & -2 & -1 \\
+0 & 0 & 0 \\
+1 & 2 & 1 \\
+\end{bmatrix}
+$$
+</pre>
+
+However, since harris corner detector can give an overwhelming amount of points in near-proximity to each other, we need to apply an NMS to the output of the harris detector. We apply a threshold based on a percentage of the maximum response value from the Harris detector, and we identify all candidate points that exceed this threshold. These candidates are then sorted in descending order by their response strength scores, ensuring that we are guaranteed to use the strongest features. Then, we iterate through the candidate points by adding the next coord in the list to the final output list, and removing all nearby candidates to that current coord within a specified radius to prevent dense clusters of points. When we activate adaptive NMS, points with stronger response values get a larger suppression radius, which distributes points more evenly across the image. Finally, to calculate the radial distance, we just use l2 distance for efficiency, and points are kept ONLY if theyre farther than the suppression radius. 
+
+In the images below, we compare the Non-Adaptive Non-Maximal Suppression Harris Response and the Adaptive Non-Maximal Suppression Harris Response.
+
+<p style="margin: 0 0 10px; color: #334155;">
+<p style="margin: 32px 0;">
+  <img src="assets/B1/no_ANMS.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
+  <img src="assets/B1/ANMS.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>No ANMS</b> (top) vs <b>ANMS</b> (bottom)
+  </span>
+</p>
+<p style="margin: 32px 0;">
+  <img src="assets/B1/MR_no_ANMS.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
+  <img src="assets/B1/MR_ANMS.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>No ANMS</b> (top) vs <b>ANMS</b> (bottom)
+  </span>
+</p>
+<p style="margin: 32px 0;">
+  <img src="assets/B1/citris_no_ANMS.png" alt="No ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb; margin-right: 2%;">
+  <img src="assets/B1/citris_ANMS.png" alt="ANMS" style="width: 80%; min-width: 350px; border-radius: 16px; border: 3.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>No ANMS</b> (top) vs <b>ANMS</b> (bottom)
+  </span>
+</p>
+
+
+
+
+
+<h3>Part B.2: Feature Descriptor Extraction</h3>
+To extract the feature descriptors we take the image, convert it to grayscale, then pad it so that we can use 40x40 window size sampling without any issues. Then we adjust the corner positions based off the padding. Next, we iterate through all the corners output from the harris corner + NMS then get 40 x 40 patches with the corner as its centroid. Then, we just apply a blur on it, and downsample to 8x8 and bias/gain normalize it. After iterating through all the corners, we get some patches that look like the following images:
+
+
+<p style="margin: 32px 0;">
+  <img src="assets/B2/bear_patches.png" alt="Feature Descriptors 1" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right:2%;">
+  <img src="assets/B2/citris_patches.png" alt="Feature Descriptors 2" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb; margin-right:2%;">
+  <img src="assets/B2/MR_patches.png" alt="Feature Descriptors 3" style="width: 26%; min-width: 180px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>Feature Descriptors:</b> Extracted 8x8 normalized feature descriptors from three different images. Bear Image (First), CITRIS Room Image (Second), Meeting Room Image (Third)
+  </span>
+</p>
+
+<h3>Part B.3: Feature Matching</h3>
+
+<p style="margin: 0 0 10px; color: #334155;">
+Implement Feature Matching (referencing "Section 5 of the paper"). This involves finding pairs of features that are similar and likely to be good matches. For thresholding, use Lowe's approach: thresholding on the ratio between the first and second nearest neighbors. Consult "Figure 6b in the paper" for picking the threshold and ignore "Section 6 of the paper."
+</p>
+
+<p><strong>Deliverables:</strong> Show matched features between image pairs.</p>
+
+<p style="margin: 32px 0;">
+  <img src="assets/B_3/feature_matches.png" alt="Feature Matching" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>Feature Matching:</b> Matched features between image pairs using Lowe's ratio test.
+  </span>
+</p>
+
+<h3>Part B.4: RANSAC for Robust Homography</h3>
+
+<p style="margin: 0 0 10px; color: #334155;">
+For "step 4", use 4-point RANSAC as described in class to compute robust homography estimates. Then, produce mosaics by adapting code from "Part A". You can use the same images from Part A but must show both manually and automatically stitched results side by side. Produce at least three mosaics.
+</p>
+
+<p><strong>Deliverables:</strong> Implement 4-point RANSAC from scratch. Show comparison of stitching manually and automatically. Create >=3 automatic mosaics.</p>
+
+<p style="margin: 32px 0;">
+  <img src="assets/B_4/manual_vs_automatic.png" alt="Manual vs Automatic Stitching" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>Manual vs Automatic:</b> Comparison of manually and automatically stitched results.
+  </span>
+</p>
+
+<p style="margin: 32px 0;">
+  <img src="assets/B_4/automatic_mosaic_1.png" alt="Automatic Mosaic 1" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>Automatic Mosaic 1:</b> First automatically generated mosaic using RANSAC.
+  </span>
+</p>
+
+<p style="margin: 32px 0;">
+  <img src="assets/B_4/automatic_mosaic_2.png" alt="Automatic Mosaic 2" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>Automatic Mosaic 2:</b> Second automatically generated mosaic using RANSAC.
+  </span>
+</p>
+
+<p style="margin: 32px 0;">
+  <img src="assets/B_4/automatic_mosaic_3.png" alt="Automatic Mosaic 3" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.05rem; color: #64748b;">
+    <b>Automatic Mosaic 3:</b> Third automatically generated mosaic using RANSAC.
+  </span>
 </p>
