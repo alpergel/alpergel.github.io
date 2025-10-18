@@ -215,7 +215,7 @@ As is clear in the comparison images above, we can see that both images provide 
 For the panorama creation, I created a CLI that takes in a folder, the number of correspondances you want (default 4). The process then sorts the image files in the folder, selects the center index and starts to map all other images to that center image. It iterates through all the images that are not the center image, makes you provide a point correspondance between the image and the center image. Then the H matrix is calculated, which allows for the warp to be calculated. The warped image, validity mask, and origin of the new image are then appended to a list. Once all images in the folder have been warped properly, a global canvas for the pano is calculated, then the warped images are placed onto the canvas at their respective origin points. Finally we utilize feather blending to soften the edges between the placed images. I did put a laplacian stack blending implementation, but commented it out as it simply takes too long with more than 2+ images in a folder. For the same reason, I opted to use nearest neighbor warping for RAM and time efficiency during the panorama process. 
 
 <p style="margin: 36px 0;">
-  <img src="assets/A_4/Bears/Screenshot 2025-10-08 234126.png" alt="Panorama Example 1" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
+  <img src="assets/B4/Bears/Bear_Manual.png" alt="Panorama Example 1" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
   <br>
   <details>
     <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
@@ -251,7 +251,7 @@ For the panorama creation, I created a CLI that takes in a folder, the number of
     </pre>
   </details>
 
-  <img src="assets/A_4/Meeting_Room/panorama_meeting_rrom.png" alt="Panorama Example 2" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
+  <img src="assets/B4/MR/MR_Manual.png" alt="Panorama Example 2" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb; margin-bottom: 24px;">
   <br>
   <details>
     <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
@@ -287,7 +287,7 @@ For the panorama creation, I created a CLI that takes in a folder, the number of
     </pre>
   </details>
 
-  <img src="assets/A_4/Haas/Screenshot 2025-10-09 122820.png" alt="Panorama Example 3" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb;">
+  <img src="assets/B4/Haas/Haas_Manual.png" alt="Panorama Example 3" style="width: 85%; min-width: 480px; border-radius: 18px; border: 3px solid #e5e7eb;">
   <br>
   <details>
     <summary style="cursor: pointer; font-weight: 600; color: #0ea5e9;">View logs</summary>
@@ -422,36 +422,285 @@ For each iteration:
 </ol>
 Once the RANSAC functionality was working, I noticed significant amount of noisy correspondances remaining, so I increased its input eps value to 3.0, and iterations to 700.
 
-
-
-<p style="margin: 32px 0;">
-  <img src="assets/B_4/manual_vs_automatic.png" alt="Manual vs Automatic Stitching" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
-  <br>
-  <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Manual vs Automatic:</b> Comparison of manually and automatically stitched results.
-  </span>
+<p style="margin: 44px 0 24px 0; font-size: 1.25rem; color: #1e293b;">
+  <b>Part B.5: Feather Blending vs. Laplacian Pyramid Blending</b>
 </p>
 
-<p style="margin: 32px 0;">
-  <img src="assets/B_4/automatic_mosaic_1.png" alt="Automatic Mosaic 1" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
-  <br>
-  <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Automatic Mosaic 1:</b> First automatically generated mosaic using RANSAC.
-  </span>
+<p style="font-size: 1.1rem; color: #334155;">
+Here, I visualized the difference between simple Feather blending and the more advanced Laplacian Pyramid blending for four different image pairs. In each comparison, on the <b>left</b> is the result from simple Feather (weighted average) blending, and on the <b>right</b> is the result from Laplacian Pyramid blending, which typically produces smoother transitions and less visible seams.
 </p>
 
-<p style="margin: 32px 0;">
-  <img src="assets/B_4/automatic_mosaic_2.png" alt="Automatic Mosaic 2" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
-  <br>
-  <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Automatic Mosaic 2:</b> Second automatically generated mosaic using RANSAC.
-  </span>
+<div style="display: flex; flex-direction: column; gap: 32px;">
+
+  <style>
+    .large-comp-img {
+      width: 540px !important;
+      height: 320px !important;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 2px solid #e5e7eb;
+      display: block;
+    }
+    .dl-btn-container {
+      width: 100%;
+      margin: 12px auto 0 auto;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .dl-zip-btn {
+      background: #2563eb;
+      color: #fff;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.08rem;
+      font-weight: 500;
+      box-shadow: 0 1px 8px 0 #e0e7ef;
+      cursor: pointer;
+      transition: background 0.12s;
+      margin-right: 10px;
+      margin-top: 2px;
+      margin-bottom: 6px;
+    }
+    .dl-zip-btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
+
+  <script type="text/javascript">
+    // Requires 'JSZip' library on the page to work in non-GitHub Markdown viewers.
+    async function downloadAsZip(imgs, setName) {
+      if (typeof JSZip === "undefined") {
+        alert('Bulk download is not available in this viewer. Please download manually.');
+        return;
+      }
+      const zip = new JSZip();
+      for (const file of imgs) {
+        try {
+          const response = await fetch(file.path);
+          if (!response.ok) throw new Error();
+          const blob = await response.blob();
+          zip.file(file.name, blob);
+        } catch {
+          // fallback to empty file
+          zip.file(file.name, "");
+        }
+      }
+      const content = await zip.generateAsync({ type: "blob" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(content);
+      a.download = setName + "_inputs.zip";
+      a.click();
+    }
+  </script>
+
+  <!-- Comparison Pair 1 -->
+  <div style="display: flex; flex-direction: row; gap: 24px; align-items: center;">
+    <div>
+      <img src="assets/B4/Alley/alley_Auto_feather.png" alt="Pair 1 Feather" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Feather Blending</div>
+    </div>
+    <div>
+      <img src="assets/B4/Alley/alley_auto_lap.png" alt="Pair 1 Laplacian" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Laplacian Pyramid Blending</div>
+    </div>
+  </div>
+  <div class="dl-btn-container">
+    <button class="dl-zip-btn"
+      onclick="downloadAsZip(
+        [
+          {path: 'assets/B4/Alley/Input/IMG_1603.jpg', name: 'alley_input1.jpg'},
+          {path: 'assets/B4/Alley/Input/IMG_1604.jpg', name: 'alley_input2.jpg'}
+        ], 'alley')">
+      Download All Input Images
+    </button>
+  </div>
+
+  <!-- Comparison Pair 2 -->
+  <div style="display: flex; flex-direction: row; gap: 24px; align-items: center;">
+    <div>
+      <img src="assets/B4/CITRIS_Room/CITRIS_Room_Auto_feather.png" alt="Pair 2 Feather" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Feather Blending</div>
+    </div>
+    <div>
+      <img src="assets/B4/CITRIS_Room/citris_room_auto_lap.png" alt="Pair 2 Laplacian" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Laplacian Pyramid Blending</div>
+    </div>
+  </div>
+  <div class="dl-btn-container">
+    <button class="dl-zip-btn"
+      onclick="downloadAsZip(
+        [
+          {path: 'assets/B4/CITRIS_Room/Input/IMG_1532.jpg', name: 'citris_room_input1.jpg'},
+          {path: 'assets/B4/CITRIS_Room/Input/IMG_1535.jpg', name: 'citris_room_input2.jpg'},
+          {path: 'assets/B4/CITRIS_Room/Input/IMG_1536.jpg', name: 'citris_room_input3.jpg'},
+          {path: 'assets/B4/CITRIS_Room/Input/IMG_1537.jpg', name: 'citris_room_input4.jpg'},
+          {path: 'assets/B4/CITRIS_Room/Input/IMG_1538.jpg', name: 'citris_room_input5.jpg'}
+        ], 'citris_room')">
+      Download All Input Images
+    </button>
+  </div>
+
+  <!-- Comparison Pair 3 -->
+  <div style="display: flex; flex-direction: row; gap: 24px; align-items: center;">
+    <div>
+      <img src="assets/B4/Grimes/grimes_auto_feather.png" alt="Pair 3 Feather" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Feather Blending</div>
+    </div>
+    <div>
+      <img src="assets/B4/Grimes/grimes_auto_lap.png" alt="Pair 3 Laplacian" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Laplacian Pyramid Blending</div>
+    </div>
+  </div>
+  <div class="dl-btn-container">
+    <button class="dl-zip-btn"
+      onclick="downloadAsZip(
+        [
+          {path: 'assets/B4/Grimes/Input/IMG_1605.jpg', name: 'grimes_input1.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1606.jpg', name: 'grimes_input2.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1607.jpg', name: 'grimes_input3.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1608.jpg', name: 'grimes_input4.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1609.jpg', name: 'grimes_input5.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1610.jpg', name: 'grimes_input6.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1611.jpg', name: 'grimes_input7.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1612.jpg', name: 'grimes_input8.jpg'},
+          {path: 'assets/B4/Grimes/Input/IMG_1613.jpg', name: 'grimes_input9.jpg'}
+        ], 'grimes')">
+      Download All Input Images
+    </button>
+  </div>
+
+  <!-- Comparison Pair 4 -->
+  <div style="display: flex; flex-direction: row; gap: 24px; align-items: center;">
+    <div>
+      <img src="assets/B4/SDH/SDH_auto_feather.png" alt="Pair 4 Feather" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Feather Blending</div>
+    </div>
+    <div>
+      <img src="assets/B4/SDH/SDH_auto_lap.png" alt="Pair 4 Laplacian" class="large-comp-img">
+      <div style="text-align:center; color:#64748b; margin-top:4px;">Laplacian Pyramid Blending</div>
+    </div>
+  </div>
+  <div class="dl-btn-container">
+    <button class="dl-zip-btn"
+      onclick="downloadAsZip(
+        [
+          {path: 'assets/B4/SDH/Input/IMG_1588.jpg', name: 'sdh_input1.jpg'},
+          {path: 'assets/B4/SDH/Input/IMG_1589.jpg', name: 'sdh_input2.jpg'},
+          {path: 'assets/B4/SDH/Input/IMG_1590.jpg', name: 'sdh_input3.jpg'}
+        ], 'sdh')">
+      Download All Input Images
+    </button>
+  </div>
+</div>
+
+<p style="margin-top:20px; font-size: 1.05rem; color: #64748b;">
+  <b>Observations:</b> In all cases, Laplacian Pyramid blending produces smoother, more seamless composites compared to the visible seams or ghosting that can occur with Feather blending, especially when there are strong edges or exposure differences. However, I noticed an odd bug that I could not solve, where the borders of the last image added during the panorama blending process does not have its outer borders blurred, resulting in the sharp and blurred edge difference. However, it seems this bug does not negatively affect the actual blended seam between the colored parts of the panorama images.
 </p>
 
-<p style="margin: 32px 0;">
-  <img src="assets/B_4/automatic_mosaic_3.png" alt="Automatic Mosaic 3" style="width: 80%; min-width: 400px; border-radius: 16px; border: 2.5px solid #e5e7eb;">
-  <br>
-  <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Automatic Mosaic 3:</b> Third automatically generated mosaic using RANSAC.
-  </span>
-</p>
+
+
+<!-- Comparison Set 1 -->
+<div style="display: flex; flex-direction: row; gap: 24px; align-items: flex-end; margin: 36px 0;">
+  <div>
+    <img src="assets/B4/Bears/Bear_Manual.png" alt="Set 1 Manual Alignment" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Manual Alignment</div>
+  </div>
+  <div>
+    <img src="assets/B4/Bears/Bears_Auto_feather.png" alt="Set 1 Automatic Feather" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Feather Blending</div>
+  </div>
+  <div>
+    <img src="assets/B4/Bears/bears_auto_lap.png" alt="Set 1 Automatic Laplacian" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Laplacian Blending</div>
+  </div>
+</div>
+<div class="dl-btn-container">
+  <button class="dl-zip-btn"
+    onclick="downloadAsZip(
+      [
+        {path: 'assets/B4/Bears/Input/4.jpg', name: 'bears_input1.jpg'},
+        {path: 'assets/B4/Bears/Input/5.jpg', name: 'bears_input2.jpg'}
+      ], 'bears')">
+    Download All Input Images
+  </button>
+</div>
+
+<!-- Comparison Set 2 -->
+<div style="display: flex; flex-direction: row; gap: 24px; align-items: flex-end; margin: 36px 0;">
+  <div>
+    <img src="assets/B4/CITRIS_Room_2/CITRIS_Room_2_manual.png" alt="Set 2 Manual Alignment" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Manual Alignment</div>
+  </div>
+  <div>
+    <img src="assets/B4/CITRIS_Room_2/CITRIS_Room2_Auto_feather.png" alt="Set 2 Automatic Feather" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Feather Blending</div>
+  </div>
+  <div>
+    <img src="assets/B4/CITRIS_Room_2/citris_room_2_auto_lap.png" alt="Set 2 Automatic Laplacian" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Laplacian Blending</div>
+  </div>
+</div>
+<div class="dl-btn-container">
+  <button class="dl-zip-btn"
+    onclick="downloadAsZip(
+      [
+        {path: 'assets/B4/CITRIS_Room_2/Input/2.jpg', name: 'citris_room_2_input1.jpg'},
+        {path: 'assets/B4/CITRIS_Room_2/Input/3.jpg', name: 'citris_room_2_input2.jpg'},
+        {path: 'assets/B4/CITRIS_Room_2/Input/4.jpg', name: 'citris_room_2_input3.jpg'}
+      ], 'citris_room_2')">
+    Download All Input Images
+  </button>
+</div>
+
+<!-- Comparison Set 3 -->
+<div style="display: flex; flex-direction: row; gap: 24px; align-items: flex-end; margin: 36px 0;">
+  <div>
+    <img src="assets/B4/MR/MR_Manual.png" alt="Set 3 Manual Alignment" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Manual Alignment</div>
+  </div>
+  <div>
+    <img src="assets/B4/MR/MR_auto_feather.png" alt="Set 3 Automatic Feather" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Feather Blending</div>
+  </div>
+  <div>
+    <img src="assets/B4/MR/MR_auto_lap.png" alt="Set 3 Automatic Laplacian" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Laplacian Blending</div>
+  </div>
+</div>
+<div class="dl-btn-container">
+  <button class="dl-zip-btn"
+    onclick="downloadAsZip(
+      [
+        {path: 'assets/B4/MR/Input/IMG_1524.jpg', name: 'mr_input1.jpg'},
+        {path: 'assets/B4/MR/Input/IMG_1525.jpg', name: 'mr_input2.jpg'}
+      ], 'mr')">
+    Download All Input Images
+  </button>
+</div>
+
+<!-- Comparison Set 4 -->
+<div style="display: flex; flex-direction: row; gap: 24px; align-items: flex-end; margin: 36px 0;">
+  <div>
+    <img src="assets/B4/Haas/Haas_Manual.png" alt="Set 4 Manual Alignment" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Manual Alignment</div>
+  </div>
+  <div>
+    <img src="assets/B4/Haas/Haas_Auto_feather.png" alt="Set 4 Automatic Feather" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Feather Blending</div>
+  </div>
+  <div>
+    <img src="assets/B4/Haas/haas_auto_lap.png" alt="Set 4 Automatic Laplacian" class="large-comp-img">
+    <div style="text-align:center; color:#64748b; margin-top:4px;">Automatic Laplacian Blending</div>
+  </div>
+</div>
+<div class="dl-btn-container">
+  <button class="dl-zip-btn"
+    onclick="downloadAsZip(
+      [
+        {path: 'assets/B4/Haas/Input/1.jpg', name: 'haas_input1.jpg'},
+        {path: 'assets/B4/Haas/Input/2.jpg', name: 'haas_input2.jpg'}
+      ], 'haas')">
+    Download All Input Images
+  </button>
+</div>
