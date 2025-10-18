@@ -430,9 +430,6 @@ For each iteration:
 </ol>
 Once the RANSAC functionality was working, I noticed a significant amount of noisy correspondences remaining, so I increased its input eps value to 3.0 and iterations to 700.
 
-<p style="margin: 44px 0 24px 0; font-size: 1.25rem; color: #1e293b;">
-  <b>Part B.5: Feather Blending vs. Laplacian Pyramid Blending</b>
-</p>
 
 <p style="font-size: 1.1rem; color: #334155;">
 Here, I visualized the difference between simple Feather blending and the more advanced Laplacian Pyramid blending for four different image pairs. In each comparison, on the <b>left</b> is the result from simple Feather (weighted average) blending, and on the <b>right</b> is the result from Laplacian Pyramid blending, which typically produces smoother transitions and less visible seams.
