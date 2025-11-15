@@ -402,42 +402,10 @@ To compare, I also trained a gaussian splat of the same scene, shown below (Some
   title="UC Berkeley Gaussian Splat Viewer"
 ></iframe>
 <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.08rem; text-align:center;">
-  Interactive Gaussian Splat Viewer - UC Berkeley Scan
+  Interactive Gaussian Splat Viewer 
 </figcaption>
 
 
-<!-- <style> body {margin: 0;} </style>
-
-<script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.178.0/three.module.js",
-      "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/0.1.10/spark.module.js"
-    }
-  }
-</script>
-
-<script type="module">
-  import * as THREE from "three";
-  import { SplatMesh } from "@sparkjsdev/spark";
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement)
-
-  const splatURL = "assets/Extras/Splat/UC Berkeley.ply";
-  const butterfly = new SplatMesh({ url: splatURL });
-  butterfly.quaternion.set(1, 0, 0, 0);
-  butterfly.position.set(0, 0, -3);
-  scene.add(butterfly);
-
-  renderer.setAnimationLoop(function animate(time) {
-    renderer.render(scene, camera);
-    butterfly.rotation.y += 0.01;
-  });
-</script> -->
 
 
 <h2>Extras Part 1: Optimizer Change</h2>
