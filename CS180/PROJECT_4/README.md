@@ -359,6 +359,19 @@ To train on my own data, I collected around 35 images with the same ARUCO setup 
     <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Validation LPIPS</figcaption>
   </figure>
 </div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 20px 0;">
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/custom/IMG_1777.jpg" alt="Sample Training Image" style="width:400px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Sample training image</figcaption>
+  </figure>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 20px 0;">
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/viser/Screenshot 2025-11-15 131747.png" alt="Sample Training Image" style="width:400px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Viser Ray + Sample Visualization of Test Set</figcaption>
+  </figure>
+</div>
+
 <p>Generated GIF:</p>
 <div style="display:flex; flex-direction:column; align-items:center;">
   <img 
