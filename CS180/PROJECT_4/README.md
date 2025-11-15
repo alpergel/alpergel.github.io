@@ -231,6 +231,123 @@ Utilizing these functions, we're able to generate the frustum, ray, and sample v
   If enabled, the script will push updated views to viser server to show model progress from novel validation perspectives. Finally, the trained model is saved to disk as a pickle file, and all accumulated losses, the model, and PSNRs over training are plotted as needed.
 
 </p>
+
+<h3>LEGO Dataset Training</h3>
+When trained on the LEGO dataset provided with the hyperparameters LR=1e-3, near=2.0, far=6.0, num_samples=64, we get the following training progression
+<div style="display: flex; flex-direction: column; gap: 2px; align-items: center; margin: 18px 0;">
+  <div style="display: flex; flex-direction: row; gap: 2px; justify-content: center;">
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lego_training/lego/batch_000500_epoch_1.png" alt="Lego training 0" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #500</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lego_training/lego/batch_001000_epoch_1.png" alt="Lego training 1" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #1000</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lego_training/lego/batch_001500_epoch_1.png" alt="Lego training 2" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #1500</figcaption>
+    </figure>
+  </div>
+  <div style="display: flex; flex-direction: row; gap: 2px; justify-content: center;">
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lego_training/lego/batch_003500_epoch_1.png" alt="Lego training 3" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #3500</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lego_training/lego/batch_005500_epoch_2.png" alt="Lego training 4" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #2, Batch #5500</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lego_training/lego/batch_007500_epoch_2.png" alt="Lego training 5" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #2, Batch #7500 </figcaption>
+    </figure>
+  </div>
+</div>
+
+The following figures show the training loss and PSNR metrics and the validation PSNR metrics respectively. 
+<div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 20px 0;">
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/lego_training/training_metrics.png" alt="Training Loss" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Training Loss</figcaption>
+  </figure>
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/lego_training/validation_psnr.png" alt="Validation PSNR" style="width:470px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Validation PSNR</figcaption>
+  </figure>
+</div>
+
+<p>Finally, using the circular render boilerplate code provided + my render_novel_view function, we are able to generate the following GIF as an output of this training </p>
+<div style="display:flex; flex-direction:column; align-items:center;">
+  <img 
+    src="assets/Part2/lego_training/novel_views.gif" 
+    alt="LEGO Dataset Circular Novel View GIF" 
+    style="width:1000px; max-width:100%; border-radius:10px; border:2.5px solid #222;" 
+    loop
+    autoplay
+  >
+  <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem; text-align:center;">
+    Rendered Novel View GIF
+  </figcaption>
+</div>
+
+<h3>Lafufu Dataset Training</h3>
+When trained on the LAFUFU dataset provided with the hyperparameters LR=5e-4, near=0.02, far=0.5, num_samples=64, we get the following training progression
+
+<div style="display: flex; flex-direction: column; gap: 2px; align-items: center; margin: 18px 0;">
+  <div style="display: flex; flex-direction: row; gap: 2px; justify-content: center;">
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lafufu_training/lafufu/batch_000500_epoch_1.png" alt="Lego training 0" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #500</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lafufu_training/lafufu/batch_001000_epoch_1.png" alt="Lego training 1" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #1000</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lafufu_training/lafufu/batch_001500_epoch_1.png" alt="Lego training 2" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #1500</figcaption>
+    </figure>
+  </div>
+  <div style="display: flex; flex-direction: row; gap: 2px; justify-content: center;">
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lafufu_training/lafufu/batch_003500_epoch_1.png" alt="Lego training 3" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #1, Batch #3500</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lafufu_training/lafufu/batch_005500_epoch_1.png" alt="Lego training 4" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #2, Batch #5500</figcaption>
+    </figure>
+    <figure style="text-align: center; margin: 0;">
+      <img src="assets/Part2/lafufu_training/lafufu/batch_006000_epoch_1.png" alt="Lego training 5" style="width: 700px; border-radius: 10px; border: 2.5px solid #222;">
+      <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #2, Batch #6000 </figcaption>
+    </figure>
+  </div>
+</div>
+The following figures show the training loss and the validation PSNR metrics respectively. 
+<div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 20px 0;">
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/lafufu_training/training_loss.png" alt="Training Loss" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Training Loss</figcaption>
+  </figure>
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/lafufu_training/validation_psnr.png" alt="Validation PSNR" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Validation PSNR</figcaption>
+  </figure>
+</div>
+<p>Generated GIF:</p>
+<div style="display:flex; flex-direction:column; align-items:center;">
+  <img 
+    src="assets/Part2/lafufu_training/novel_views.gif" 
+    alt="LAFUFU Dataset Circular Novel View GIF" 
+    style="width:1000px; max-width:100%; border-radius:10px; border:2.5px solid #222;" 
+    loop
+    autoplay
+  >
+  <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem; text-align:center;">
+    Rendered Novel View GIF
+  </figcaption>
+</div>
 <h2>Part 2.6: Training with Your Own Data</h2>
 
 <h2>Extras Part 1: Optimizer Change</h2>
