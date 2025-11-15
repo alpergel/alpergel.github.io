@@ -349,10 +349,31 @@ The following figures show the training loss and PSNR metrics and the validation
 </div>
 <h2>Part 2.6: Training with Your Own Data</h2>
 To train on my own data, I collected around 35 images with the same ARUCO setup on my tablet and a matcha drink next to the tablet to be the scanned object. I ran the images through the pnp script given the previous camera calibration. The pnp script then output the poses in terms of an npz file. Then this npz file was passed into my 3d_nerf.py script and trained using the ADAMW optimizer with near =0.17, far = 1.39, lr = 1e-3, num_samples = 64, epochs = 5.
-
-
+<div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 20px 0;">
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/custom/training_metrics.png" alt="Training Loss" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Training Loss and PSNR</figcaption>
+  </figure>
+  <figure style="text-align:center; margin:0;">
+    <img src="assets/Part2/custom/lpips.png" alt="Validation PSNR" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Validation LPIPS</figcaption>
+  </figure>
+</div>
+<p>Generated GIF:</p>
+<div style="display:flex; flex-direction:column; align-items:center;">
+  <img 
+    src="assets/Part2/custom/novel_views.gif" 
+    alt="LAFUFU Dataset Circular Novel View GIF" 
+    style="width:1000px; max-width:100%; border-radius:10px; border:2.5px solid #222;" 
+    loop
+    autoplay
+  >
+  <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem; text-align:center;">
+    Rendered Novel View GIF
+  </figcaption>
+</div>
 <h2> Part 2.6 Splat Version </h2>
-To compare, I also trained a gaussian splat of the same scene, shown below (Some browsers might not show the viewer):
+To compare, I also trained a gaussian splat of the same scene, shown below (Some browsers might not show the viewer) :
 <style> body {margin: 0;} </style>
 
 <script type="importmap">
