@@ -387,7 +387,26 @@ To train on my own data, I collected around 35 images with the same ARUCO setup 
 </div>
 <h2> Part 2.6 Splat Version </h2>
 To compare, I also trained a gaussian splat of the same scene, shown below (Some browsers might not show the viewer) :
-<style> body {margin: 0;} </style>
+
+<!--
+  Embedding interactive UC Berkeley Gaussian Splat viewer.
+  The viewer below loads the Splat file "assets/Extras/Splat/UC Berkeley.ply" using the WebGL implementation
+  contained in @UC Berkeley.html. This viewer is standalone and fully client-side.
+  If the viewer does not appear, please open the HTML file in a modern browser.
+-->
+<iframe
+  src="assets/Extras/Splat/UC%20Berkeley.html"
+  style="width: 100%; min-height: 600px; height: 70vh; border: 2.5px solid #222; border-radius: 10px; margin: 24px 0;"
+  allowfullscreen
+  loading="lazy"
+  title="UC Berkeley Gaussian Splat Viewer"
+></iframe>
+<figcaption style="margin-top: 2px; color: #64748b; font-size: 1.08rem; text-align:center;">
+  Interactive Gaussian Splat Viewer - UC Berkeley Scan
+</figcaption>
+
+
+<!-- <style> body {margin: 0;} </style>
 
 <script type="importmap">
   {
@@ -418,7 +437,7 @@ To compare, I also trained a gaussian splat of the same scene, shown below (Some
     renderer.render(scene, camera);
     butterfly.rotation.y += 0.01;
   });
-</script>
+</script> -->
 
 
 <h2>Extras Part 1: Optimizer Change</h2>
