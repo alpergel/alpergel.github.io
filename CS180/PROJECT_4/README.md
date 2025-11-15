@@ -60,15 +60,15 @@ Then, I placed a hat next to the same ARUCO tag setup, and captured around 35 im
   <img src="assets/Part0/Screenshot 2025-11-14 201026.png" alt="Set 1 - Image 2" style="width: 40%; min-width: 120px; border-radius: 10px; border: 1.5px solid #e5e7eb;">
   <br>
   <span style="font-size: 1.05rem; color: #64748b;">
-    <b>Figure 1:</b> Viser Frustums of Custom Dataset From Afar and Upclose
+    <b>Figure 1:</b> Viser Frustums of Custom Dataset From Afar and Up Close
   </span>
 </p>
 
 
 <h2>Part 1: Fit a Neural Field to a 2D Image </h2>
-<p>For my 2D NeRF I had a sequential setup where I would first pass the input through my SinPosEnc module, which had a 2D input, and an output of input dim (2) + 2*(encoding frequency) * (input dim). That would pass to a linear layer of input dim equal to the SinPosEnc output, and layer width set by the hyperparameters. After that, there was a ReLU activation then 2 more linear layers with ReLU's in between. Finally there is a linear layer of input equivalent to layer width, and output 3, since we want to output RGB (3 channels), followed by a sigmoid activation. I used an LR of 1e-2 and an Adam optimizer. The default layer width is set to 256, and default PE frequency is set at 10.</p>
+<p>For my 2D NeRF, I had a sequential setup where I would first pass the input through my SinPosEnc module, which had a 2D input, and an output of input dim (2) + 2*(encoding frequency) * (input dim). That would pass to a linear layer of input dim equal to the SinPosEnc output, and layer width set by the hyperparameters. After that, there was a ReLU activation, then 2 more linear layers with ReLU's in between. Finally there is a linear layer of input equivalent to layer width, and output 3, since we want to output RGB (3 channels), followed by a sigmoid activation. I used an LR of 1e-2 and an Adam optimizer. The default layer width is set to 256, and default PE frequency is set at 10.</p>
 
-The following figure shows the training progression visualization for the provided test image for L = 10, Layer Width  = 256, Epochs = 5
+The following figure shows the training progression visualization for the provided test image for L = 10, Layer Width = 256, Epochs = 5
 <p style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
   <img src="assets/Part1/Fox_L_10_W_256/epoch_001.png" alt="Step 1" style="width: 18%; border-radius: 12px; border: 1.5px solid #e5e7eb;">
   <img src="assets/Part1/Fox_L_10_W_256/epoch_002.png" alt="Step 2" style="width: 18%; border-radius: 12px; border: 1.5px solid #e5e7eb;">
@@ -102,13 +102,13 @@ The following figure shows the training progression visualization for my selecte
 
 </p>
 <p style="text-align: center; color: #64748b; font-size: 1.08rem;">
-  <b>Figure 2:</b> Comparison of model output at 5 training stages (left&nbsp;→&nbsp;right: earliest to latest).
+  <b>Figure 4:</b> Comparison of model output at 5 training stages (left&nbsp;→&nbsp;right: earliest to latest).
 </p>
 
 <p style="margin: 32px 0; display: flex; flex-direction: column; align-items: center;">
   <img src="assets/Part1/Dog_L_10_W_256/psnr_dog.png" alt="PSNR Curve" style="width: 60%; min-width: 280px; border-radius: 12px; border: 1.5px solid #e5e7eb;">
   <span style="color: #64748b; font-size: 1.08rem;">
-    <b>Figure 3:</b> PSNR curve across each batch
+    <b>Figure 5:</b> PSNR curve across each batch
   </span>
   <img src="assets/Part1/Dog_L_10_W_256/dog2.jpg" alt="Step 5" style="width: 18%; border-radius: 12px; border: 1.5px solid #e5e7eb; margin-top: 24px;">
   <span style="color: #64748b; font-size: 1.08rem;">
@@ -137,7 +137,7 @@ For the Hyperparameter experimentation, I chose L values of 2 and 10, and Layer 
     </div>
   </div>
   <span style="color: #64748b; font-size: 1.08rem; margin-top: 14px;">
-    <b>Figure 4:</b> 2×2 grid of model result images for different combinations of PE frequency  (L) and layer width. Top row: L=2, bottom row: L=10. Left: Width=256, Right: Width=512.
+    <b>Figure 6:</b> 2×2 grid of model result images for different combinations of PE frequency (L) and layer width. Top row: L=2, bottom row: L=10. Left: Width=256, Right: Width=512.
   </span>
 </p>
 
@@ -220,7 +220,7 @@ Utilizing these functions, we're able to generate the frustum, ray, and sample v
 </p>
 <h3>3D NERF Model Report </h3>
 <p>
-    For the model itself, the architecture is almost exactly what is described in the project instructions, with a few training tweaks to provide better performance. Instead of using a single L value of 4 for both the spatial and view direction PE's, I used an L value of 10 for the spatial and 4 for the view direction, which showed around a 2 PSNR boost to my standard model. Further, I was seeing extremely non-deterministic results between each training run, so I setup a deterministic setting (on by default), which intiializes a random torch seed, enables deterministic CUDnn, and makes the dataloader provide data in a deterministic fashion. Initially I was noticing exploding gradients during training, so before the optimizer stepping I clipped the gradient, which tended to help in most cases. In the rare case that we want to train for more than 1 epoch (takes a while), I added an Exponental LR scheduler which adjusts the LR between epochs to optimize training convergence. Finally, I found that my model would not converge regularly when utilizing the recommended lr=5e-4, so I decided to use the more ADAM optimizer standard 1e-3 LR value, which made a huge difference in my model convergence.  
+    For the model itself, the architecture is almost exactly what is described in the project instructions, with a few training tweaks to provide better performance. Instead of using a single L value of 4 for both the spatial and view direction PE's, I used an L value of 10 for the spatial and 4 for the view direction, which showed around a 2 PSNR boost to my standard model. Further, I was seeing extremely non-deterministic results between each training run, so I setup a deterministic setting (on by default), which initializes a random torch seed, enables deterministic cuDNN, and makes the dataloader provide data in a deterministic fashion. Initially I was noticing exploding gradients during training, so before the optimizer stepping I clipped the gradient, which tended to help in most cases. In the rare case that we want to train for more than 1 epoch (takes a while), I added an Exponential LR scheduler which adjusts the LR between epochs to optimize training convergence. Finally, I found that my model would not converge regularly when utilizing the recommended lr=5e-4, so I decided to use the more standard Adam optimizer LR value of 1e-3, which made a huge difference in my model convergence.  
 </p>
 <h3>3D NERF Training </h3>
 <p>
@@ -233,7 +233,7 @@ Utilizing these functions, we're able to generate the frustum, ray, and sample v
 </p>
 
 <h3>LEGO Dataset Training</h3>
-When trained on the LEGO dataset provided with the hyperparameters LR=1e-3, near=2.0, far=6.0, num_samples=64, we get the following training progression
+When trained on the LEGO dataset provided with the hyperparameters LR=1e-3, near=2.0, far=6.0, num_samples=64, we get the following training progression.
 <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; margin: 18px 0;">
   <div style="display: flex; flex-direction: row; gap: 2px; justify-content: center;">
     <figure style="text-align: center; margin: 0;">
@@ -292,7 +292,7 @@ The following figures show the training loss and PSNR metrics and the validation
 </div>
 
 <h3>Lafufu Dataset Training</h3>
-When trained on the LAFUFU dataset provided with the hyperparameters LR=5e-4, near=0.02, far=0.5, num_samples=64, we get the following training progression
+When trained on the LAFUFU dataset provided with the hyperparameters LR=5e-4, near=0.02, far=0.5, num_samples=64, we get the following training progression.
 
 <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; margin: 18px 0;">
   <div style="display: flex; flex-direction: row; gap: 2px; justify-content: center;">
@@ -323,7 +323,7 @@ When trained on the LAFUFU dataset provided with the hyperparameters LR=5e-4, ne
       <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #2, Batch #6000 </figcaption>
     </figure>
   </div>
-The following figures show the training loss and PSNR metrics and the validation PSNR metrics respectively
+The following figures show the training loss and PSNR metrics and the validation PSNR metrics respectively.
 <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 20px 0;">
   <figure style="text-align:center; margin:0;">
     <img src="assets/Part2/lafufu_training/training_metrics.png" alt="Training Loss" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
@@ -409,7 +409,7 @@ To compare, I also trained a gaussian splat of the same scene, shown below (Some
 
 
 <h2>Extras Part 1: Optimizer Change</h2>
-Since ADAM-W has given me better results in the past with other 3D reconstruction tasks like 3D gaussian splatting or monocular depth estimation, I wanted to try it out for training the 3D NeRF. I used a some-what standard weight decay of 1e-4 value. After multiple experiments, I saw that ADAM-W converged faster than using standard ADAM for my 3D NERF implementation. The following shows the comparison of an experiment using ADAM vs ADAM-W. Overall, we see that with the same amount of iterations and learning rate, ADAM-W is able to find a relatively better optima. 
+Since AdamW has given me better results in the past with other 3D reconstruction tasks like 3D gaussian splatting or monocular depth estimation, I wanted to try it out for training the 3D NeRF. I used a somewhat standard weight decay value of 1e-4. After multiple experiments, I saw that AdamW converged faster than using standard Adam for my 3D NeRF implementation. The following shows the comparison of an experiment using Adam vs AdamW. Overall, we see that with the same amount of iterations and learning rate, AdamW is able to find a relatively better optimum. 
 <div style="display: flex; flex-direction: row; gap: 24px; justify-content: center; align-items: flex-start; margin: 20px 0;">
   <figure style="text-align:center; margin:0;">
     <img 
@@ -488,4 +488,4 @@ After running into a lot of trouble trial and erroring near/far values for my cu
 From these distances, it computes statistics: minimum, maximum, mean, and median distances from the origin, plus minimum, maximum, and mean pairwise distances.
 For suggestions, it sets near to at least 0.1 or half the minimum camera distance from the origin (whichever is larger), and far to 1.5× the maximum pairwise camera distance to cover the scene extent. If cameras are roughly equidistant from the origin (ratio < 2.0), it adjusts near to 0.3× the minimum distance and far to 1.5× the maximum distance, assuming an orbiting setup. It ensures far is at least 2× near to maintain a reasonable sampling range.
 
-Overall, this isnt always accurate, but I found it to give me relatively good suggested values for near/far.
+Overall, this isn't always accurate, but I found it to give me relatively good suggested values for near/far.
