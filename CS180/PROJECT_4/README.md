@@ -142,8 +142,98 @@ For the Hyperparameter experimentation, I chose L values of 2 and 10, and Layer 
 </p>
 
 <h2>Part 2.1-2.5: Fit a Neural Radiance Field from Multi-view Images </h2>
+To make the functionality of this section work, I had to create the following functions:
+<h3>c2w_transform(c2w, x_c)</h3>
+<p>
+  Transforms 3D points from camera coordinate space to world coordinate space using the camera-to-world transformation matrix <code>c2w</code>. This function handles homogeneous coordinates by converting input points to 4D (if not already), applies the <code>4&times;4</code> <code>c2w</code> matrix via matrix multiplication, and then divides the XYZ components by the W component to obtain final 3D world coordinates. This is essential for NeRF because it lets us map points from the camera's perspective to the shared world coordinate system where the 3D scene is represented.
+</p>
+
+<h3>p2c_transform(K, uv, s)</h3>
+<p>
+  Converts image pixel coordinates <code>uv</code> to 3D camera coordinate points using the camera intrinsics matrix <code>K</code>. The pixel coordinates are first converted to homogeneous coordinates and are mapped with the inverse of <code>K</code> to get normalized camera coordinates. The result is normalized by its z (depth) component and scaled by parameter <code>s</code>. This operation is the inverse of projecting 3D points to pixels, and is vital for ray generation (to know which 3D camera direction corresponds to each pixel). An epsilon value is used internally for numerical stability.
+</p>
+
+<h3>pixel_to_ray(K, c2w, uv)</h3>
+<p>
+  Generates a ray in world coordinates for a given pixel position by combining <code>p2c_transform</code> and <code>c2w_transform</code>. It first maps the pixel <code>uv</code> to a 3D camera point (via <code>p2c_transform</code>), then transforms the point into world coordinates (via <code>c2w_transform</code>). The resulting ray origin is taken from the translation part of <code>c2w</code> (the camera center), and the ray direction is the normalized vector pointing from the camera center to the transformed 3D point. This works both for batched and individual pixel inputs, and is essential for sampling rays through the scene in NeRF.
+</p>
+
+<h3>sample_rays_from_images(imgs, c2w, K, N_rays, device)</h3>
+<p>
+  Randomly samples <code>N_rays</code> from a set of training images, returning for each ray: its world-space origin, direction, and the ground truth RGB value at the sampled pixel. For each ray, it randomly selects an image, picks a random pixel, generates a ray using <code>pixel_to_ray</code>, and samples from the pixel center (add 0.5 offset). Handles device transfer (CPU/GPU) as required and ensures all tensors share the device for efficient training. This is how training batches of rays are created when training a NeRF, so the model learns from diverse, non-duplicated rays.
+</p>
+
+<h3>sample_points_along_ray(ray_o_arr, ray_d_arr, near, far, n_samp, perturb)</h3>
+<p>
+  Samples <code>n_samp</code> evenly or randomly spaced 3D points along each input ray, between user-specified <code>near</code> and <code>far</code> bounds. Creates depth values using <code>linspace</code>, and uses stratified sampling (jittered intervals) if <code>perturb</code> is <code>True</code> (for better anti-aliasing and convergence during training). Computes 3D points using <code>point = o + d * t</code>. Also returns the per-segment deltas between sample depths, needed for volume rendering. The returned set of points for each ray is what NeRF will evaluate to estimate density and color for compositing the final image.
+</p>
+
+<h3>RaysData Class</h3>
+<p>
+  A PyTorch <code>Dataset</code> that precomputes all rays (origins, directions) for all pixels in all training images up front, storing them alongside ground truth RGB pixels, camera intrinsics, and c2w matrices. This design speeds up each training epoch by avoiding on-the-fly ray generation (at the cost of higher RAM usage). It enables efficient, fast random (or sequential) sampling of rays for NeRF training, and also stores intrinsic parameters (fx, fy, ox, oy) for use in other calculations.
+</p>
+
+<h3>RaysData _precompute_all_rays() Method</h3>
+<p>
+  Precomputes and stores all rays and associated RGB pixel data for every pixel in every image. Builds a meshgrid of all (image, row, col) tuples, computes UV coordinates (offset by 0.5 for pixel-center sampling as directed in the project instructions), and for each pixel, generates the ray in world space. All results are stored as numpy arrays (CPU) to minimize GPU memory usage. This method is run once, as part of dataset initialization, and ensures random ray batches can be sampled efficiently during training. 
+</p>
+
+<h3>RaysData sample_rays(B) Method</h3>
+<p>
+  Generates <code>B</code> (Batch count) random rays and associated ground-truth pixels by dynamic slicing, without using precomputed arrays. For each ray, randomly selects an image and a pixel location, computes the ray in world space, and queries the ground-truth RGB. Useful for debugging or for memory-constrained settings (lower memory use, but less efficient per batch). Returns ray origins, directions, and ground-truth RGBs as PyTorch tensors on the correct device.
+</p>
+
+<h3>RaysData __len__() Method</h3>
+<p>
+  Returns the total number of ray-pixel pairs in the dataset, i.e., <code>num_images &times; H &times; W</code>. This determines the iterable length for PyTorch <code>DataLoader</code>. 
+</p>
+
+<h3>RaysData __getitem__(idx) Method</h3>
+<p>
+  Implements the <code>Dataset</code> interface for random access: given an <code>idx</code>, instead of returning a deterministic result, it samples a new random ray via <code>sample_rays_from_images</code> every time. This enables random sampling for training, but ignores the index value (&mdash; for deterministic/precomputed ray access, index directly into self.rays_o, self.rays_d, and self.pixels arrays).
+</p>
+
+<h3>volrend(sigmas, rgbs, deltas, t_vals)</h3>
+<p>
+  Implements the core volume rendering equation that integrates density and color predictions along rays to produce final pixel colors. The function computes the transmittance T (how much light passes through the volume up to each sample point) by calculating the cumulative sum of sigma times delta (density times step size) for all previous samples, then exponentiating the negative of this sum. The transmittance is clamped between 0 and 50 to prevent numerical overflow in the exponential function. The weight for each sample point is computed as T multiplied by (1 - exp(-sigma_delta)), which represents the probability that a ray terminates at that point. These weights are then multiplied by the predicted RGB colors and summed across all samples along the ray to produce the final discretized RGB value. 
+  
+  If depth values (t_vals) are provided, the function also computes the expected depth by taking a weighted sum of the depth values using the same weights, which is useful for visualization and depth estimation. This volume rendering integral is what allows NeRF to learn a continuous 3D scene representation from discrete 2D images, so this is critical!
+</p>
+
+<h3>render_novel_view(model, c2w, K, H, W, near, far, n_samples, device, chunk_size)</h3>
+<p>
+  Renders a complete novel view image from a trained NeRF model by generating rays for every pixel in the output image and aggregating the model's predictions through volume rendering. The function first creates a grid of pixel coordinates covering the entire image (H x W pixels), offsetting each coordinate by 0.5 to sample from pixel centers. It then generates rays for all pixels using the pixel_to_ray function with the provided camera-to-world transformation matrix (c2w) and camera intrinsics (K). 
+  
+  To handle memory constraints when rendering high-resolution images, the function processes rays in chunks rather than all at once. For each chunk, it samples points along the rays between the near and far planes, flattens the points and ray directions for batch processing, and passes them through the NeRF model to get density and color predictions. The volrend function then integrates these predictions to produce the final color for each ray. 
+  
+  All rendered chunks are concatenated and reshaped into an H x W x 3 image array. The function operates in evaluation mode (model.eval()) with gradient computation disabled (torch.no_grad()) for efficient inference, and uses perturb=False during point sampling to ensure deterministic, high-quality renders without the random jittering used during training.
+</p>
+
+<h3>Viser Dataset Visualization</h3>
+Utilizing these functions, we're able to generate the frustum, ray, and sample visualization, with the Lego dataset example shown below:
+<p style="text-align: center; margin: 32px 0;">
+  <img src="assets/Part2/viser/viser_lego.png" alt="Lego frustum, ray, and sample visualization" style="width: 82%; min-width: 320px; border-radius: 13px; border: 2px solid #e5e7eb;">
+  <br>
+  <span style="font-size: 1.08rem; color: #64748b;">
+    Example of frustum, ray, and sample visualization for the Lego dataset.
+  </span>
+</p>
+<h3>3D NERF Model Report </h3>
+<p>
+    For the model itself, the architecture is almost exactly what is described in the project instructions, with a few training tweaks to provide better performance. Instead of using a single L value of 4 for both the spatial and view direction PE's, I used an L value of 10 for the spatial and 4 for the view direction, which showed around a 2 PSNR boost to my standard model. Further, I was seeing extremely non-deterministic results between each training run, so I setup a deterministic setting (on by default), which intiializes a random torch seed, enables deterministic CUDnn, and makes the dataloader provide data in a deterministic fashion. Initially I was noticing exploding gradients during training, so before the optimizer stepping I clipped the gradient, which tended to help in most cases. In the rare case that we want to train for more than 1 epoch (takes a while), I added an Exponental LR scheduler which adjusts the LR between epochs to optimize training convergence. Finally, I found that my model would not converge regularly when utilizing the recommended lr=5e-4, so I decided to use the more ADAM optimizer standard 1e-3 LR value, which made a huge difference in my model convergence.  
+</p>
+<h3>3D NERF Training </h3>
+<p>
+  Once we have the capabilities described above, we need to create a train function to train the 3D NERF MLP. As is standard, the trainer first facilitates setup (initializing criterion, optimizer, model, dataloader, etc). Then it sets the model in training state, and runs the NeRF model for a specified number of epochs, where each epoch iterates over batches of rays sampled from the dataset. For every batch, rays and their ground-truth colors (and optionally depth values from monocular depth estimation if enabled) are sampled and processed. Each batch is fed into the model to obtain predicted colors and densities, and points along each ray are sampled between near and far bounds. These outputs are passed through volumetric rendering to compute final RGB values and depths for the batch. 
+  
+  The training objective minimizes the difference between rendered and true RGB colors using a mean squared error loss.  Gradients are computed and applied to update the model parameters, with gradient clipping for stability (as mentioned above), and the learning rate is decayed after each epoch via a scheduler. During training, the model's performance is periodically visualized: rendered images are produced from both a training and a validation viewpoint and are saved to disk. PSNR is computed for each batch to quantitatively track reconstruction quality. 
+  
+  If enabled, the script will push updated views to viser server to show model progress from novel validation perspectives. Finally, the trained model is saved to disk as a pickle file, and all accumulated losses, the model, and PSNRs over training are plotted as needed.
+
+</p>
 <h2>Part 2.6: Training with Your Own Data</h2>
 
 <h2>Extras Part 1: Optimizer Change</h2>
 
 <h2>Extras Part 2: Monocular Depth Supervision</h2>
+If a depth prior is provided, an additional scaled L1 loss encourages the model's depth predictions to match the provided MDE depths.
