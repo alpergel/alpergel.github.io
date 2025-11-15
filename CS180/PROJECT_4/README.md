@@ -323,11 +323,10 @@ When trained on the LAFUFU dataset provided with the hyperparameters LR=5e-4, ne
       <figcaption style="margin-top: 2px; color: #64748b; font-size: 1.12rem;">Epoch #2, Batch #6000 </figcaption>
     </figure>
   </div>
-</div>
-The following figures show the training loss and the validation PSNR metrics respectively. 
+The following figures show the training loss and PSNR metrics and the validation PSNR metrics respectively
 <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 20px 0;">
   <figure style="text-align:center; margin:0;">
-    <img src="assets/Part2/lafufu_training/training_loss.png" alt="Training Loss" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
+    <img src="assets/Part2/lafufu_training/training_metrics.png" alt="Training Loss" style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;">
     <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">Training Loss</figcaption>
   </figure>
   <figure style="text-align:center; margin:0;">
@@ -349,8 +348,86 @@ The following figures show the training loss and the validation PSNR metrics res
   </figcaption>
 </div>
 <h2>Part 2.6: Training with Your Own Data</h2>
+To train on my own data, I collected around 35 images with the same ARUCO setup on my tablet and a matcha drink next to the tablet to be the scanned object. I ran the images through the pnp script given the previous camera calibration. The pnp script then output the poses in terms of an npz file. Then this npz file was passed into my 3d_nerf.py script and trained using the ADAMW optimizer with near =0.17, far = 1.39, lr = 1e-3, num_samples = 64, epochs = 5.
 
 <h2>Extras Part 1: Optimizer Change</h2>
+Since ADAM-W has given me better results in the past with other 3D reconstruction tasks like 3D gaussian splatting or monocular depth estimation, I wanted to try it out for training the 3D NeRF. I used a some-what standard weight decay of 1e-4 value. After multiple experiments, I saw that ADAM-W converged faster than using standard ADAM for my 3D NERF implementation. The following shows the comparison of an experiment using ADAM vs ADAM-W. Overall, we see that with the same amount of iterations and learning rate, ADAM-W is able to find a relatively better optima. 
+<div style="display: flex; flex-direction: row; gap: 24px; justify-content: center; align-items: flex-start; margin: 20px 0;">
+  <figure style="text-align:center; margin:0;">
+    <img 
+      src="assets/Extras/ADAM/validation_psnr.png" 
+      alt="ADAM Training Metrics" 
+      style="width:500px; max-width:100%; border-radius:10px; border:2px solid #777;"
+    >
+    <figcaption style="color: #64748b; font-size: 1.05rem; margin-top: 2px;">
+      ADAM: Val PSNR
+    </figcaption>
+  </figure>
+  <figure style="text-align:center; margin:0;">
+    <img 
+      src="assets/Extras/ADAMW/validation_psnr.png" 
+      alt="ADAM-W Training Metrics" 
+      style="width:500px; max-width:100%; border-radius:10px; border:2px solid #777;"
+    >
+    <figcaption style="color: #64748b; font-size: 1.05rem; margin-top: 2px;">
+      ADAM-W: Val PSNR
+    </figcaption>
+  </figure>
+</div>
 
 <h2>Extras Part 2: Monocular Depth Supervision</h2>
-If a depth prior is provided, an additional scaled L1 loss encourages the model's depth predictions to match the provided MDE depths.
+Monocular Depth Estimation (MDE) provides additional geometric supervision to the NeRF training process by leveraging pretrained depth estimation models to generate depth maps for training images. During initialization, if MDE is enabled, the system processes all training images through either a MoGeV2 or Depth-AnythingV2 model (user chooses through CLI) to produce dense depth predictions. These depth maps serve as pseudo-ground-truth depth values for each pixel in the training images. During training, the NeRF model renders not only RGB colors but also expected depth values along each ray through the volume rendering equation by taking the sum of ws_squeezed * t_vals. A depth loss term is computed using L1 loss between the normalized rendered depths and normalized MDE-predicted depths, weighted by a factor lambda_d (set at 0.1) and added to the standard color reconstruction loss. This depth supervision helps the NeRF model learn more accurate 3D geometry and scene structure by constraining the density field to produce depth values consistent with the MDE predictions, which is particularly beneficial when training data is limited or when the scene contains complex geometry that might be difficult to learn from RGB supervision alone.
+
+However, since these depth estimation models struggle with multi-view consistency, they introduce significant depth noise. This noise in the loss calculation fights against the NeRF's theoretically perfect depth estimation. For that reason, the impact of the depth on the loss calculation needs to be decayed exponentially as training progresses so that it only serves as a good initialization, then provides less and less supervision.
+
+<p style="margin-bottom: 0.7em;"><strong>Depth estimation visualizations from the Lafufu Dataset using MOGEv2 Metric Depth Estimation:</strong></p>
+<div style="display: flex; flex-direction: row; gap: 18px; justify-content: center; align-items: flex-start; margin: 16px 0;">
+  <figure style="text-align:center; margin:0;">
+    <img 
+      src="assets/Extras/Depth/depth_0001.png" 
+      alt="Depth Visualization 1" 
+      style="width:260px; max-width:100%; border-radius:10px; border:2px solid #888;"
+    >
+    <figcaption style="color: #64748b; font-size: 0.99rem; margin-top: 2px;">Depth Prediction 1</figcaption>
+  </figure>
+  <figure style="text-align:center; margin:0;">
+    <img 
+      src="assets/Extras/Depth/depth_0010.png" 
+      alt="Depth Visualization 2" 
+      style="width:260px; max-width:100%; border-radius:10px; border:2px solid #888;"
+    >
+    <figcaption style="color: #64748b; font-size: 0.99rem; margin-top: 2px;">Depth Prediction 2</figcaption>
+  </figure>
+  <figure style="text-align:center; margin:0;">
+    <img 
+      src="assets/Extras/Depth/depth_0016.png" 
+      alt="Depth Visualization 3" 
+      style="width:260px; max-width:100%; border-radius:10px; border:2px solid #888;"
+    >
+    <figcaption style="color: #64748b; font-size: 0.99rem; margin-top: 2px;">Depth Prediction 3</figcaption>
+  </figure>
+</div>
+
+<h2>Extras Part 3: LPIPS Calculation</h2>
+In honor of Professor Efros, whose work created the LPIPS metric, my training script automatically calculates LPIPS metric using the AlexNet version each 500 batches, and outputs a plot of LPIPS over time. If the model is accurately learning the geometry, LPIPS should go down over each training iteration.
+
+The following LPIPS plot was generated from running an experiment on the LEGO dataset with num_samples = 16, LR = 1e-3, near = 2.0, far =6.0
+<p>LPIPS Metric Plot:</p>
+<div style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+  <img 
+    src="assets/Extras/lpips/lpips.png" 
+    alt="LPIPS Metric Plot" 
+    style="width:700px; max-width:100%; border-radius:10px; border:2px solid #999;"
+  >
+  <figcaption style="color: #64748b; font-size: 1.08rem; margin-top: 2px;">
+    LPIPS over Training Iterations (lower = better, AlexNet)
+  </figcaption>
+</div>
+
+<h2>Extras Part 4: Automatic Near/Far Suggestion</h2>
+After running into a lot of trouble trial and erroring near/far values for my custom scene, I decided to try to make a way to automatically suggest good near/far values for the particular set of calibrated poses. In my 3d_nerf.py file, the analyze_scene_bounds function analyzes camera positions to suggest near and far values for NeRF training. It extracts camera positions from the translation component ([:3, 3]) of the camera-to-world matrices, combines training and validation cameras if provided, and computes statistics about the scene geometry. Primarily, it calculates two distance metrics: distances from the origin (assuming the scene is centered) and pairwise distances between all camera pairs. These help estimate scene scale and camera spread.
+
+From these distances, it computes statistics: minimum, maximum, mean, and median distances from the origin, plus minimum, maximum, and mean pairwise distances.
+For suggestions, it sets near to at least 0.1 or half the minimum camera distance from the origin (whichever is larger), and far to 1.5× the maximum pairwise camera distance to cover the scene extent. If cameras are roughly equidistant from the origin (ratio < 2.0), it adjusts near to 0.3× the minimum distance and far to 1.5× the maximum distance, assuming an orbiting setup. It ensures far is at least 2× near to maintain a reasonable sampling range.
+
+Overall, this isnt always accurate, but I found it to give me relatively good suggested values for near/far.
