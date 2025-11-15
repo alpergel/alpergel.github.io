@@ -350,6 +350,43 @@ The following figures show the training loss and PSNR metrics and the validation
 <h2>Part 2.6: Training with Your Own Data</h2>
 To train on my own data, I collected around 35 images with the same ARUCO setup on my tablet and a matcha drink next to the tablet to be the scanned object. I ran the images through the pnp script given the previous camera calibration. The pnp script then output the poses in terms of an npz file. Then this npz file was passed into my 3d_nerf.py script and trained using the ADAMW optimizer with near =0.17, far = 1.39, lr = 1e-3, num_samples = 64, epochs = 5.
 
+
+<h2> Part 2.6 Splat Version </h2>
+To compare, I also trained a gaussian splat of the same scene, shown below (Some browsers might not show the viewer):
+<style> body {margin: 0;} </style>
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.178.0/three.module.js",
+      "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/0.1.10/spark.module.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import * as THREE from "three";
+  import { SplatMesh } from "@sparkjsdev/spark";
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement)
+
+  const splatURL = "assets/Extras/Splat/UC Berkeley.ply";
+  const butterfly = new SplatMesh({ url: splatURL });
+  butterfly.quaternion.set(1, 0, 0, 0);
+  butterfly.position.set(0, 0, -3);
+  scene.add(butterfly);
+
+  renderer.setAnimationLoop(function animate(time) {
+    renderer.render(scene, camera);
+    butterfly.rotation.y += 0.01;
+  });
+</script>
+
+
 <h2>Extras Part 1: Optimizer Change</h2>
 Since ADAM-W has given me better results in the past with other 3D reconstruction tasks like 3D gaussian splatting or monocular depth estimation, I wanted to try it out for training the 3D NeRF. I used a some-what standard weight decay of 1e-4 value. After multiple experiments, I saw that ADAM-W converged faster than using standard ADAM for my 3D NERF implementation. The following shows the comparison of an experiment using ADAM vs ADAM-W. Overall, we see that with the same amount of iterations and learning rate, ADAM-W is able to find a relatively better optima. 
 <div style="display: flex; flex-direction: row; gap: 24px; justify-content: center; align-items: flex-start; margin: 20px 0;">
