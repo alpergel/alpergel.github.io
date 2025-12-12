@@ -19,7 +19,7 @@ figure img { border-radius: 0 !important; border: none !important; box-shadow: n
 
 <h2 align="center" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0.2rem 0 0.4rem; letter-spacing: 0.3px; background: linear-gradient(90deg, #5B8DEF, #A78BFA); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">Alper Gel — Project 5</h2>
 <p style="margin: 0 0 10px; color: #334155;">
-NOTE FOR GRADER: All images have been upscaled using the upscale starter code provided. Due to that, there can be artifacts in background elements with low contrast. If the original low-res are needed, I would be happy to provide it. 
+NOTE FOR GRADER: Some images have been upscaled using the upscale starter code provided. Due to that, there can be artifacts in background elements with low contrast. If the original low-res are needed, I would be happy to provide it. 
 
 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 12px 0 16px;">
 <h2 id="required-part-1">Section A</h2>
@@ -461,7 +461,7 @@ To infill, we just run the iterative denoising loop, making sure to pass in i_st
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
   </figure>
   <figure style="margin: 0; text-align: center; width: 19%;">
-    <img src="assets/SectionA/Part1/drawing-2/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <img src="assets/SectionA/Part1/infill-1/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
   </figure>
   <figure style="margin: 0; text-align: center; width: 19%;">
@@ -670,3 +670,33 @@ Using the same methodology, we can text-condition the translation as shown below
 </p>
 
 <h3 id="required-part-1">Part A.8: Visual Anagrams</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+To make the visual anagrams, we run the UNet with the conditional prompt and unconditional prompt, and calculate the eps via the CFG formula (same as previous parts). The essential part is you have two prompts p1, p2, where for each denoising step, you get the noise estimate using p1 on the original image, then flip the image, get the noise estimate using p2 on the flipped image, and flip the noise estimate back. Finally, you just average the two noise estimates and run a DDPM update with the averaged eps value. 
+
+This creates visual anagrams like shown below:
+<p style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 20px;">
+  <img src="assets/SectionA/Part1/anagrams/car-1.png" alt="Sample 1" style="width: 30%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+  <img src="assets/SectionA/Part1/anagrams/car-2.png" alt="Sample 2" style="width: 30%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+</p>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 23:</b> Prompt used: "a photo of a mountain lake at sunrise" and "a high quality picture of a sports car" 
+</p>
+<p style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 20px;">
+  <img src="assets/SectionA/Part1/anagrams/flower-1.png" alt="Sample 1" style="width: 30%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+  <img src="assets/SectionA/Part1/anagrams/flower-2.png" alt="Sample 2" style="width: 30%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+</p>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 24:</b> Prompt used: "a pencil drawing of a flower in a vase" and "a high quality photo of a forest path"
+</p>
+
+
+<h3 id="required-part-1">Part A.9: Hybrid Images</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+Similar to the previous part, we use a two-prompt method, where one prompt provides the low-frequency structure, and the second provides the high frequency details. For each denoising step, we get noise estimates for each prompt on the same image. Then we take an LPF of both noise estimates. We calculate the high frequencies of the second noise estimate by taking the original second noise estimate and subtracting it from its respective low frequency version. We then just combine the low-frequency first noise estimate and high-frequency second noise estimate to get our final eps value. Then we just do a standard DDPM denoising step.
+<p style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 20px;">
+  <img src="assets/SectionA/Part1/hybrids/cat.png" alt="Sample 1" style="width: 30%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+  <img src="assets/SectionA/Part1/hybrids/kid.png" alt="Sample 2" style="width: 30%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+</p>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 25:</b> Left Image used prompts: "a photo of a woman wearing headphones" and "a photo of a cat sitting on a windowsill", Right Image used prompts: "a photo of a smiling child" and "a photo of a couple walking in the rain"
+</p>
