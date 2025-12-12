@@ -169,3 +169,245 @@ To complete this section, we simply need to pass the respective noisy image into
 </p>
 
 <h3 id="required-part-1">Part A.5: Diffusion Model Sampling</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+For this section, we can re-use the iterative_denoise function from earlier, but instead of passing a "noised" ground truth image, we can pass in pure-noise in the shape of the expected input (1,3,64,64), and set i_start to 0. Combined with the prompt embedding "a high quality photo", we are able to sample the model's high quality photo image manifold and generate images from pure noise. Of course, since we are sampling from pure noise, there can be quite a bit of bad results, but typically you should get pretty good results. The following images show 5 such samples:
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/sample1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/sample2.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 2</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/sample3.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/sample4.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 4</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/sample5.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 5</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 10:</b> Five images sampled from the diffusion model by starting from pure noise and denoising with the prompt "a high quality photo".
+</p>
+
+<h3 id="required-part-1">Part A.6: Classifier Free Guidance</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+To perform CFG we calculate the alpha_cumprod, alpha_cumprod_prev, alpha, and beta values, then we get the conditional and unconditional noise estimates by passing the respective prompts into stage 1 of the unet. We then split the estimate into noise and variance estimate for the conditional output, and get the unconditional noise estimate for the unconditional output. Using the given equation 4, we are able to calculate the final noise estimate via:
+
+noise_est = uncond_noise_est + scale * (noise_est - uncond_noise_est)
+
+Then we use the DDPM equations to calculate pred_prev image and add the variance to it. 
+
+This gives us the following images:
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/cfg-sample1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/cfg-sample2.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 2</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/cfg-sample3.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/cfg-sample4.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 4</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/cfg-sample5.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Sample 5</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 11:</b> Five images sampled from the diffusion model via CFG process using 'a high quality photo' prompt and null prompt for unconditional.
+</p>
+
+<h3 id="required-part-1">Part A.7: Image-to-Image Translation</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+Using the same iterative_denoise_cfg function from the previous section, we can to image to image translation by iterating through the noise levels provided, passing the image we want to translate through the forward function, then passing that into the iterative_denoise_cfg along with the noise level info, the cond and uncond prompt, and the timesteps. This allows us to translate images like the Campanille example shown below
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-camp/translate-camp-1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-camp/translate-camp-3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-camp/translate-camp-5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-camp/translate-camp-7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-camp/translate-camp-10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-camp/translate-camp-20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 12:</b> Campanille Image-to-Image Translation shown at noise levels: [1, 3, 5, 7, 10, 20]
+</p>
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-cat/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-cat/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-cat/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-cat/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-cat/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-cat/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-cat/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 13:</b> Custom Image #1 Image-to-Image Translation shown at noise levels: [1, 3, 5, 7, 10, 20]
+</p>
+
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-otter/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-otter/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-otter/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-otter/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-otter/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-otter/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/translate-otter/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 14:</b> Custom Image #2 Image-to-Image Translation shown at noise levels: [1, 3, 5, 7, 10, 20]
+</p>
+<h3 id="required-part-1">Part A.7.1: Editing Hand-Drawn and Web Images</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+We can use the same stratey to edit images from the web or drawings. Shown in the following figures:
+
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/edit-elephant/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/edit-elephant/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/edit-elephant/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/edit-elephant/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/edit-elephant/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/edit-elephant/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/edit-elephant/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 15:</b> Web Image Editing shown at noise levels: [1, 3, 5, 7, 10, 20]
+</p>
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-1/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-1/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-1/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-1/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-1/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-1/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-1/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 16:</b> Drawing #1 Editing shown at noise levels: [1, 3, 5, 7, 10, 20]
+</p>
