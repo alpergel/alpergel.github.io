@@ -559,3 +559,114 @@ To infill, we just run the iterative denoising loop, making sure to pass in i_st
 <p style="text-align: center; color: #64748b; font-size: 1.08rem;">
   <b>Figure 19:</b> Custom Picture #2 Infill
 </p>
+
+<h3 id="required-part-1">Part A.7.3: Text-Conditioned Image-To-Image Translation</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+Using the same methodology, we can text-condition the translation as shown below:
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/campanile-text/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/campanile-text/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/campanile-text/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/campanile-text/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/campanile-text/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/campanile-text/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original Image</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 20:</b> Campanille to Rocket Ship
+</p>
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-text/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-text/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-text/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-text/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-text/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-text/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-text/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original Image</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 21:</b> Custom Image #1 to Chef
+</p>
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-text//1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-text//3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-text//5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-text//7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-text/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-text/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-text/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original Image</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 22:</b> Custom Image #2 to Chef
+</p>
+
+<h3 id="required-part-1">Part A.8: Visual Anagrams</h3>
