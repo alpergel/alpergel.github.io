@@ -337,9 +337,10 @@ Using the same iterative_denoise_cfg function from the previous section, we can 
 <p style="text-align: center; color: #64748b; font-size: 1.08rem;">
   <b>Figure 14:</b> Custom Image #2 Image-to-Image Translation shown at noise levels: [1, 3, 5, 7, 10, 20]
 </p>
+
 <h3 id="required-part-1">Part A.7.1: Editing Hand-Drawn and Web Images</h3>
 <p style="margin: 0 0 10px; color: #334155;">
-We can use the same stratey to edit images from the web or drawings. Shown in the following figures:
+We can use the same stratey to edit images from the web or my horribly drawn drawings. Shown in the following figures:
 
 
 <div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
@@ -410,4 +411,151 @@ We can use the same stratey to edit images from the web or drawings. Shown in th
 </div>
 <p style="text-align: center; color: #64748b; font-size: 1.08rem;">
   <b>Figure 16:</b> Drawing #1 Editing shown at noise levels: [1, 3, 5, 7, 10, 20]
+</p>
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 16:</b> Drawing #2 Editing shown at noise levels: [1, 3, 5, 7, 10, 20]
+</p>
+<h3 id="required-part-1">Part A.7.2: Inpainting</h3>
+<p style="margin: 0 0 10px; color: #334155;">
+We can also randomly create square masks of an image, and turn the translation/editing task into an image inpainting task. 
+
+To create the mask you simply pick how much of the pixels you want to be masked, calculate an appropriate square, randomly pick a x0,y0 value for the square, then mask appropriately. 
+
+To infill, we just run the iterative denoising loop, making sure to pass in i_start. We then run CFG and DDPM, but the differentiation is that we forward diffuse the original image to timesteps t and prev-t, which allows us to blend the predicted denoised image in ONLY the masked regions, and the original noisy image in unmasked regions. In effect, this preserves the original content outside of the mask. 
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/infill-1/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/drawing-2/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/infill-1/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/infill-1/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/infill-1/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/infill-1/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/infill-1/masked.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Masked Image</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 17:</b> Campanille Infill
+</p>
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-infill/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-infill/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-infill/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-infill/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-infill/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-infill/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/leo-infill/masked.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Masked Image</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 18:</b> Custom Picture #1 Infill
+</p>
+
+<div style="margin: 32px 0; display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 16px;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-infill/1.png" alt="Generated Sample 1" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 1</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-infill/3.png" alt="Generated Sample 2" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 3</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-infill/5.png" alt="Generated Sample 3" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 5</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-infill/7.png" alt="Generated Sample 4" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 7</figcaption>
+  </figure>
+  <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-infill/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-infill/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
+  </figure>
+  </figure>
+   <figure style="margin: 0; text-align: center; width: 19%;">
+    <img src="assets/SectionA/Part1/tricky-infill/masked.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
+    <figcaption style="font-size: 0.98rem; color: #64748b;">Masked Image</figcaption>
+  </figure>
+</div>
+<p style="text-align: center; color: #64748b; font-size: 1.08rem;">
+  <b>Figure 19:</b> Custom Picture #2 Infill
 </p>
