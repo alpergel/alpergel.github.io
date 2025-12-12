@@ -289,7 +289,7 @@ Using the same iterative_denoise_cfg function from the previous section, we can 
     <img src="assets/SectionA/Part1/translate-cat/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/translate-cat/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
@@ -324,12 +324,11 @@ Using the same iterative_denoise_cfg function from the previous section, we can 
     <img src="assets/SectionA/Part1/translate-otter/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/translate-otter/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/translate-otter/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
   </figure>
@@ -364,12 +363,11 @@ We can use the same stratey to edit images from the web or my horribly drawn dra
     <img src="assets/SectionA/Part1/edit-elephant/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/edit-elephant/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/edit-elephant/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
   </figure>
@@ -399,12 +397,11 @@ We can use the same stratey to edit images from the web or my horribly drawn dra
     <img src="assets/SectionA/Part1/drawing-1/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/drawing-1/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/drawing-1/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
   </figure>
@@ -434,12 +431,11 @@ We can use the same stratey to edit images from the web or my horribly drawn dra
     <img src="assets/SectionA/Part1/drawing-2/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/drawing-2/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/drawing-2/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Original</figcaption>
   </figure>
@@ -476,12 +472,11 @@ To infill, we just run the iterative denoising loop, making sure to pass in i_st
     <img src="assets/SectionA/Part1/infill-1/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/infill-1/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/infill-1/masked.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Masked Image</figcaption>
   </figure>
@@ -511,12 +506,11 @@ To infill, we just run the iterative denoising loop, making sure to pass in i_st
     <img src="assets/SectionA/Part1/leo-infill/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/leo-infill/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/leo-infill/masked.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Masked Image</figcaption>
   </figure>
@@ -546,12 +540,11 @@ To infill, we just run the iterative denoising loop, making sure to pass in i_st
     <img src="assets/SectionA/Part1/tricky-infill/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/tricky-infill/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/tricky-infill/masked.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Masked Image</figcaption>
   </figure>
@@ -585,12 +578,11 @@ Using the same methodology, we can text-condition the translation as shown below
     <img src="assets/SectionA/Part1/campanile-text/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/campanile-text/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Original Image</figcaption>
   </figure>
@@ -620,12 +612,11 @@ Using the same methodology, we can text-condition the translation as shown below
     <img src="assets/SectionA/Part1/leo-text/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/leo-text/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/leo-text/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Original Image</figcaption>
   </figure>
@@ -655,12 +646,11 @@ Using the same methodology, we can text-condition the translation as shown below
     <img src="assets/SectionA/Part1/tricky-text/10.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 10</figcaption>
   </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/tricky-text/20.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Level 20</figcaption>
   </figure>
-  </figure>
-   <figure style="margin: 0; text-align: center; width: 19%;">
+  <figure style="margin: 0; text-align: center; width: 19%;">
     <img src="assets/SectionA/Part1/tricky-text/orig.png" alt="Generated Sample 5" style="width: 100%; border-radius: 10px; border: 1.5px solid #e5e7eb;">
     <figcaption style="font-size: 0.98rem; color: #64748b;">Original Image</figcaption>
   </figure>
