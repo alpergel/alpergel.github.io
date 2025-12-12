@@ -8,3 +8,4 @@ Class Project Github Page
 - [Project 2](CS180/PROJECT_2/README.md)
 - [Project 3](CS180/PROJECT_3/README.md)
 - [Project 4](CS180/PROJECT_4/README.md)
+- [Project 5](CS180/PROJECT_5/README.md)
